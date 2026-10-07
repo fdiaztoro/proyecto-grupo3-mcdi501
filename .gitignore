@@ -10,6 +10,9 @@ __pycache__/
 .DS_Store
 .AppleDouble
 
+# Config local del editor (rutas de LaTeX específicas de cada máquina/SO)
+.vscode/
+
 # Credenciales
 .env
 
