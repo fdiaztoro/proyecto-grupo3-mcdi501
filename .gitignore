@@ -1,0 +1,37 @@
+# Entorno virtual
+.venv/
+__pycache__/
+*.pyc
+
+# Jupyter
+.ipynb_checkpoints/
+
+# macOS
+.DS_Store
+.AppleDouble
+
+# Credenciales
+.env
+
+# Carpetas generadas por Anaconda/Jupyter
+.virtual_documents/
+anaconda_projects/
+
+# Dataset original: no se versiona, ver data/README.md
+data/raw/*
+!data/raw/.gitkeep
+
+# Datos pesados y modelos
+*.ckpt
+*.pth
+
+# Archivos de bloqueo temporal de Microsoft Office (se crean al abrir un .xlsx/.docx)
+~$*
+
+# Artefactos de compilación LaTeX en redaccion/ (el PDF final vive en informes/)
+redaccion/**/*.aux
+redaccion/**/*.log
+redaccion/**/*.out
+redaccion/**/*.toc
+redaccion/**/*.synctex.gz
+redaccion/**/informe.pdf

@@ -1,0 +1,28 @@
+# Dependencias directas del proyecto (Python 3.13)
+# Generado a partir del entorno .venv del grupo
+
+# Nucleo de datos
+numpy==2.5.3
+pandas==3.0.5
+openpyxl==3.1.5
+
+# Visualizacion
+matplotlib==3.11.1
+seaborn==0.13.2
+
+# Modelado
+scikit-learn==1.9.0
+scipy==1.18.1
+
+# Pruebas automatizadas
+pytest==9.1.1
+
+# Jupyter y entorno
+jupyterlab==4.6.3
+notebook==7.6.2
+ipykernel==7.3.0
+
+# Integracion con Git
+jupyterlab-git==0.54.1
+jupytext==1.19.5
+nbstripout==0.9.1
