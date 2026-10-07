@@ -21,11 +21,13 @@
 
 ## Cómo obtener el dataset
 
-1. Descargar el archivo desde Kaggle:
-   <https://www.kaggle.com/datasets/dileep070/heart-disease-prediction-using-logistic-regression>
-   (requiere cuenta de Kaggle).
-2. Guardarlo en `data/raw/` como `framingham.csv`.
-3. El archivo en `data/raw/` no se versiona en Git (ver `.gitignore`); cada integrante debe descargarlo por su cuenta siguiendo estos pasos.
+Se descarga automático vía [`kagglehub`](https://pypi.org/project/kagglehub/) (no requiere
+cuenta ni login de Kaggle para este dataset público): basta con correr la primera celda de
+descarga del notebook
+(`informes/formativa-1-eda-inferencia/Formativa1_FraminghamHeartStudy_Codigo.ipynb`), que deja
+`framingham.csv` copiado en `data/raw/`. El archivo en `data/raw/` no se versiona en Git (ver
+`.gitignore`); cada integrante lo obtiene corriendo esa celda la primera vez que trabaja en el
+proyecto.
 
 ## Estructura
 

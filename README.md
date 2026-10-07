@@ -115,8 +115,15 @@ python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 
 # 4. Activar la higiene automática de notebooks en el repositorio local
+# nbstripout borra las salidas (outputs) de las celdas antes de cada commit
 nbstripout --install
-git config filter.nbstripout.extrakeys "metadata.language_info.version metadata.colab cell.metadata.id cell.metadata.colab cell.metadata.outputId"
+# - extrakeys: quita metadata ruidosa que varía según el entorno de cada
+#   integrante (versión de Python, metadata de Colab, etc.).
+# - --keep-id: sin esto, nbstripout reasigna el `id` de TODAS las celdas en
+#   cada commit (a secuenciales 0,1,2...), generando diffs de metadata sin
+#   cambios reales cada vez que alguien del equipo commitea el notebook.
+git config filter.nbstripout.extrakeys "metadata.language_info.version metadata.colab cell.metadata.id cell.metadata.colab cell.metadata.outputId" \
+  && git config filter.nbstripout.clean "$(git config filter.nbstripout.clean) --keep-id"
 
 # 5. Registrar el kernel del proyecto en Jupyter
 python -m ipykernel install --user --name grupo3_mcdi501 --display-name "Python (grupo3-mcdi501)"
