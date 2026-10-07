@@ -37,4 +37,6 @@ redaccion/**/*.log
 redaccion/**/*.out
 redaccion/**/*.toc
 redaccion/**/*.synctex.gz
+redaccion/**/*.fls
+redaccion/**/*.fdb_latexmk
 redaccion/**/informe.pdf
