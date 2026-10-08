@@ -40,3 +40,4 @@ redaccion/**/*.synctex.gz
 redaccion/**/*.fls
 redaccion/**/*.fdb_latexmk
 redaccion/**/informe.pdf
+informes/formativa-1-eda-inferencia/figuras/
