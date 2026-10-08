@@ -142,8 +142,14 @@ python -m ipykernel install --user --name grupo3_mcdi501 --display-name "Python 
 ### LaTeX (para compilar los informes)
 
 No hace falta instalar nada local si usan **Overleaf** (ver
-[`plantillas/README.md`](plantillas/README.md)). Para compilar localmente en
-macOS, la opción liviana es **BasicTeX** (instalador oficial, no compila
+[`plantillas/README.md`](plantillas/README.md)). Para compilar localmente
+se necesita una **distribución LaTeX** (el motor que compila). La extensión
+*LaTeX Workshop* de VS Code es solo la interfaz: sin una distribución
+instalada falla con `spawn latexmk ENOENT`.
+
+#### macOS
+
+La opción liviana es **BasicTeX** (instalador oficial, no compila
 nada desde código fuente — evitar `brew install tectonic`, que puede
 arrastrar una compilación de LLVM de 30-60+ minutos):
 
@@ -162,6 +168,54 @@ cd redaccion/<evaluación>
 pdflatex informe.tex
 pdflatex informe.tex
 ```
+
+#### Windows
+
+La opción equivalente es **MiKTeX** (~1 GB, se instala solo para el
+usuario, sin permisos de administrador). A diferencia de BasicTeX, descarga
+por su cuenta los paquetes que falten (`tcolorbox`, `titlesec`, etc.) la
+primera vez que se compila, así que no hay que instalarlos a mano:
+
+```powershell
+winget install --id MiKTeX.MiKTeX --exact --scope user
+
+# Abrir una terminal NUEVA (para que tome el PATH) y luego:
+initexmf --set-config-value "[MPM]AutoInstall=1"   # instala paquetes faltantes sin preguntar
+miktex packages update-package-database
+miktex packages update
+
+# Compilar (dos pasadas, para que el índice salga completo):
+cd redaccion\<evaluación>
+pdflatex informe.tex
+pdflatex informe.tex
+```
+
+Después de instalar MiKTeX hay que **cerrar y volver a abrir VS Code por
+completo** para que encuentre `pdflatex`.
+
+**LaTeX Workshop en Windows:** su receta por defecto usa `latexmk`, que en
+MiKTeX requiere tener Perl instalado. Para evitarlo, configurarlo para que
+compile con `pdflatex` dos veces (igual que arriba) y que no compile solo
+al abrir o guardar (así nunca genera archivos dentro de `plantillas/`). En
+`.vscode/settings.json` (es local de cada uno, está en `.gitignore`):
+
+```jsonc
+{
+    "latex-workshop.latex.autoBuild.run": "never",
+    "latex-workshop.latex.tools": [
+        {
+            "name": "pdflatex",
+            "command": "pdflatex",
+            "args": ["-synctex=1", "-interaction=nonstopmode", "-file-line-error", "%DOC%"]
+        }
+    ],
+    "latex-workshop.latex.recipes": [
+        { "name": "pdflatex x2", "tools": ["pdflatex", "pdflatex"] }
+    ]
+}
+```
+
+Se compila con `Ctrl+Alt+B` y el PDF se abre con `Ctrl+Alt+V`.
 
 ## Convención de commits
 
