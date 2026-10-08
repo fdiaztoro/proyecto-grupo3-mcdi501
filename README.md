@@ -91,6 +91,16 @@ proyecto-grupo3-mcdi501/
    Los archivos que genera la compilación (`.aux`, `.log`, `.toc`, el
    `informe.pdf` de prueba) están en `.gitignore`: son desechables y se
    regeneran recompilando.
+
+   Si el `informe.tex` incluye figuras (`\includegraphics{figuras/...}`),
+   el notebook de `informes/<evaluación>/` las guarda **directo** en
+   `redaccion/<evaluación>/figuras/` al correrlo (no hay una copia
+   intermedia en `informes/`, para que no existan dos versiones que se
+   puedan desincronizar). Esa carpeta **sí se sube a git** (igual que
+   `logo_unab.png`), así cualquiera puede clonar el repo y compilar el
+   informe directo, sin instalar Python ni correr el notebook primero. Si
+   alguien cambia el notebook y las figuras cambian, hay que correrlo de
+   nuevo y commitear la carpeta `figuras/` actualizada.
 3. **`informes/`** — una vez compilado y revisado, se copia el PDF final
    acá (junto al notebook de esa evaluación), con el nombre definitivo
    del entregable. Esta carpeta queda siempre limpia: solo lo terminado

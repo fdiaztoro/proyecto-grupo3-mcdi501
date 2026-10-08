@@ -40,4 +40,5 @@ redaccion/**/*.synctex.gz
 redaccion/**/*.fls
 redaccion/**/*.fdb_latexmk
 redaccion/**/informe.pdf
+# Salida de scratch del notebook (no hace falta para compilar el informe)
 informes/formativa-1-eda-inferencia/figuras/
