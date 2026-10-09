@@ -9,6 +9,7 @@
 \usepackage{array}
 \usepackage{enumitem}
 \usepackage{graphicx}
+\usepackage{float}
 \usepackage{xcolor}
 \usepackage{titlesec}
 \usepackage{fancyhdr}
@@ -64,7 +65,7 @@
 \newcommand{\proyIntegrantes}{Felipe Díaz Toro, Pablo Ríos Passteni, Guillermo Subiabre Chacón, Ninoska Yévenes Hernández}
 \newcommand{\proyDataset}{Framingham Heart Study (Riesgo Cardiovascular)}
 \newcommand{\proyDocente}{Jean Paul Maidana}
-\newcommand{\proyFecha}{08/10/2026}
+\newcommand{\proyFecha}{09/10/2026}
 \newcommand{\proyRepo}{\url{https://github.com/fdiaztoro/proyecto-grupo3-mcdi501}}
 
 \setlength{\parindent}{0pt}
@@ -147,7 +148,7 @@ numéricas continuas o cuasi-continuas (edad, colesterol total, presión sistól
 que su media se interpreta como una proporción. La Tabla~\ref{tab:descriptivos} resume la tendencia
 central y la dispersión de las variables numéricas.
 
-\begin{table}[htbp]
+\begin{table}[H]
 \centering
 \caption{Medidas descriptivas de las variables numéricas (calculadas con los datos disponibles de cada variable).}
 \label{tab:descriptivos}
@@ -174,7 +175,9 @@ colesterol total, la presión sistólica y la glucosa tienen la media por sobre 
 mediana es 0 y la media 9{,}0: más de la mitad de los participantes no fuma, y la media la elevan
 los fumadores intensos (hasta 70 cigarrillos diarios).
 
-\begin{table}[htbp]
+La Tabla~\ref{tab:dispersion} agrega el rango intercuartílico, el coeficiente de variación y la asimetría de cada variable, y la Tabla~\ref{tab:binarias} resume las variables binarias.
+
+\begin{table}[H]
 \centering
 \caption{Dispersión y forma de las variables numéricas.}
 \label{tab:dispersion}
@@ -199,7 +202,7 @@ por valores extremos. El colesterol, la presión sistólica y el IMC muestran as
 derecha, lo que respalda usar la mediana como referencia. Los cigarrillos por día tienen el mayor
 coeficiente de variación (132\,\%): muchas personas no fuman y unas pocas fuman mucho.
 
-\begin{table}[htbp]
+\begin{table}[H]
 \centering
 \caption{Variables binarias y tasa de CHD a 10 años según el atributo.}
 \label{tab:binarias}
@@ -233,7 +236,7 @@ menos un dato faltante, que es lo que se perdería al eliminar filas incompletas
 extremos según la regla de Tukey van de 1{,}3\,\% (colesterol) a 4{,}9\,\% (glucosa) de las
 observaciones. No hay inconsistencias entre variables relacionadas: ninguna presión diastólica supera a la sistólica y el hábito de fumar es coherente con los cigarrillos por día.
 
-\begin{figure}[htbp]
+\begin{figure}[H]
 \centering
 \includegraphics[width=\linewidth]{figuras/fig_panorama.png}
 \caption{(a) Distribución de la variable objetivo. (b) Porcentaje de datos faltantes por variable.}
@@ -246,7 +249,7 @@ que evaluar los modelos futuros con métricas sensibles a la clase minoritaria. 
 que los faltantes son pocos salvo en la glucosa (9{,}2\,\%) y la educación (2{,}5\,\%); el resto no
 supera el 1{,}3\,\%.
 
-\begin{figure}[htbp]
+\begin{figure}[H]
 \centering
 \includegraphics[width=\linewidth]{figuras/fig_distribuciones.png}
 \caption{Distribución de tres variables cuantitativas representativas, con su media o mediana de referencia.}
@@ -259,9 +262,9 @@ asimétricos a la derecha, con la mediana (234 mg/dL y 128 mmHg) por debajo de l
 valores altos. Por eso en esas dos variables se usa la mediana como referencia, y el colesterol se
 recorta al percentil 99 solo para efectos de visualización (los cálculos usan todos los datos).
 
-\begin{figure}[htbp]
+\begin{figure}[H]
 \centering
-\includegraphics[width=0.85\linewidth]{figuras/fig_correlacion.png}
+\includegraphics[width=0.85\linewidth,height=10cm,keepaspectratio]{figuras/fig_correlacion.png}
 \caption{Matriz de correlaciones entre las variables predictoras (triángulo inferior).}
 \label{fig:correlacion}
 \end{figure}
@@ -282,7 +285,7 @@ aproximación normal que justifica el Teorema Central del Límite: $\bar{x} \pm 
 con $EE = s/\sqrt{n}$ para las medias, y $\hat{p} \pm z_{0{,}975}\cdot\sqrt{\hat{p}(1-\hat{p})/n}$
 para la proporción. La Tabla~\ref{tab:ic} resume los valores.
 
-\begin{table}[htbp]
+\begin{table}[H]
 \centering
 \caption{Estimación puntual e intervalos de confianza al 95\,\%.}
 \label{tab:ic}
@@ -331,7 +334,7 @@ $$H_0:\ \text{hipertensión prevalente y CHD son independientes} \qquad \text{vs
 La frecuencia esperada mínima es 200, muy por encima del umbral de 5, así que el supuesto de la
 prueba se cumple. La asociación es significativa ($\chi^2=132{,}6$; $\text{gl}=1$; $p<0{,}0001$; sin corrección de continuidad, $\chi^2=133{,}7$, mismo resultado), con una intensidad débil a moderada ($V$ de Cramér $=0{,}18$).
 
-\begin{figure}[htbp]
+\begin{figure}[H]
 \centering
 \includegraphics[width=0.75\linewidth]{figuras/fig_hipertension.png}
 \caption{Tasa de CHD a 10 años según hipertensión prevalente, con la media global de referencia.}
