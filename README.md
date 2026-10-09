@@ -91,6 +91,16 @@ proyecto-grupo3-mcdi501/
    Los archivos que genera la compilación (`.aux`, `.log`, `.toc`, el
    `informe.pdf` de prueba) están en `.gitignore`: son desechables y se
    regeneran recompilando.
+
+   Si el `informe.tex` incluye figuras (`\includegraphics{figuras/...}`),
+   el notebook de `informes/<evaluación>/` las guarda **directo** en
+   `redaccion/<evaluación>/figuras/` al correrlo (no hay una copia
+   intermedia en `informes/`, para que no existan dos versiones que se
+   puedan desincronizar). Esa carpeta **sí se sube a git** (igual que
+   `logo_unab.png`), así cualquiera puede clonar el repo y compilar el
+   informe directo, sin instalar Python ni correr el notebook primero. Si
+   alguien cambia el notebook y las figuras cambian, hay que correrlo de
+   nuevo y commitear la carpeta `figuras/` actualizada.
 3. **`informes/`** — una vez compilado y revisado, se copia el PDF final
    acá (junto al notebook de esa evaluación), con el nombre definitivo
    del entregable. Esta carpeta queda siempre limpia: solo lo terminado
@@ -115,8 +125,15 @@ python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 
 # 4. Activar la higiene automática de notebooks en el repositorio local
+# nbstripout borra las salidas (outputs) de las celdas antes de cada commit
 nbstripout --install
-git config filter.nbstripout.extrakeys "metadata.language_info.version metadata.colab cell.metadata.id cell.metadata.colab cell.metadata.outputId"
+# - extrakeys: quita metadata ruidosa que varía según el entorno de cada
+#   integrante (versión de Python, metadata de Colab, etc.).
+# - --keep-id: sin esto, nbstripout reasigna el `id` de TODAS las celdas en
+#   cada commit (a secuenciales 0,1,2...), generando diffs de metadata sin
+#   cambios reales cada vez que alguien del equipo commitea el notebook.
+git config filter.nbstripout.extrakeys "metadata.language_info.version metadata.colab cell.metadata.id cell.metadata.colab cell.metadata.outputId" \
+  && git config filter.nbstripout.clean "$(git config filter.nbstripout.clean) --keep-id"
 
 # 5. Registrar el kernel del proyecto en Jupyter
 python -m ipykernel install --user --name grupo3_mcdi501 --display-name "Python (grupo3-mcdi501)"
@@ -125,8 +142,14 @@ python -m ipykernel install --user --name grupo3_mcdi501 --display-name "Python 
 ### LaTeX (para compilar los informes)
 
 No hace falta instalar nada local si usan **Overleaf** (ver
-[`plantillas/README.md`](plantillas/README.md)). Para compilar localmente en
-macOS, la opción liviana es **BasicTeX** (instalador oficial, no compila
+[`plantillas/README.md`](plantillas/README.md)). Para compilar localmente
+se necesita una **distribución LaTeX** (el motor que compila). La extensión
+*LaTeX Workshop* de VS Code es solo la interfaz: sin una distribución
+instalada falla con `spawn latexmk ENOENT`.
+
+#### macOS
+
+La opción liviana es **BasicTeX** (instalador oficial, no compila
 nada desde código fuente — evitar `brew install tectonic`, que puede
 arrastrar una compilación de LLVM de 30-60+ minutos):
 
@@ -145,6 +168,54 @@ cd redaccion/<evaluación>
 pdflatex informe.tex
 pdflatex informe.tex
 ```
+
+#### Windows
+
+La opción equivalente es **MiKTeX** (~1 GB, se instala solo para el
+usuario, sin permisos de administrador). A diferencia de BasicTeX, descarga
+por su cuenta los paquetes que falten (`tcolorbox`, `titlesec`, etc.) la
+primera vez que se compila, así que no hay que instalarlos a mano:
+
+```powershell
+winget install --id MiKTeX.MiKTeX --exact --scope user
+
+# Abrir una terminal NUEVA (para que tome el PATH) y luego:
+initexmf --set-config-value "[MPM]AutoInstall=1"   # instala paquetes faltantes sin preguntar
+miktex packages update-package-database
+miktex packages update
+
+# Compilar (dos pasadas, para que el índice salga completo):
+cd redaccion\<evaluación>
+pdflatex informe.tex
+pdflatex informe.tex
+```
+
+Después de instalar MiKTeX hay que **cerrar y volver a abrir VS Code por
+completo** para que encuentre `pdflatex`.
+
+**LaTeX Workshop en Windows:** su receta por defecto usa `latexmk`, que en
+MiKTeX requiere tener Perl instalado. Para evitarlo, configurarlo para que
+compile con `pdflatex` dos veces (igual que arriba) y que no compile solo
+al abrir o guardar (así nunca genera archivos dentro de `plantillas/`). En
+`.vscode/settings.json` (es local de cada uno, está en `.gitignore`):
+
+```jsonc
+{
+    "latex-workshop.latex.autoBuild.run": "never",
+    "latex-workshop.latex.tools": [
+        {
+            "name": "pdflatex",
+            "command": "pdflatex",
+            "args": ["-synctex=1", "-interaction=nonstopmode", "-file-line-error", "%DOC%"]
+        }
+    ],
+    "latex-workshop.latex.recipes": [
+        { "name": "pdflatex x2", "tools": ["pdflatex", "pdflatex"] }
+    ]
+}
+```
+
+Se compila con `Ctrl+Alt+B` y el PDF se abre con `Ctrl+Alt+V`.
 
 ## Convención de commits
 

@@ -10,6 +10,9 @@ __pycache__/
 .DS_Store
 .AppleDouble
 
+# Config local del editor (rutas de LaTeX específicas de cada máquina/SO)
+.vscode/
+
 # Credenciales
 .env
 
@@ -34,4 +37,8 @@ redaccion/**/*.log
 redaccion/**/*.out
 redaccion/**/*.toc
 redaccion/**/*.synctex.gz
+redaccion/**/*.fls
+redaccion/**/*.fdb_latexmk
 redaccion/**/informe.pdf
+# Salida de scratch del notebook (no hace falta para compilar el informe)
+informes/formativa-1-eda-inferencia/figuras/
