@@ -42,3 +42,6 @@ redaccion/**/*.fdb_latexmk
 redaccion/**/informe.pdf
 # Salida de scratch del notebook (no hace falta para compilar el informe)
 informes/formativa-1-eda-inferencia/figuras/
+
+# Copias locales ejecutadas para Canvas (con salidas; no pasan por nbstripout)
+entrega-canvas/

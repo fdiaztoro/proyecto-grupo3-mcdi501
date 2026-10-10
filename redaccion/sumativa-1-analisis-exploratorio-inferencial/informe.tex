@@ -7,13 +7,14 @@
 % ===================== Página y utilidades ========================
 \usepackage[left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm]{geometry}
 \usepackage{array}
+\usepackage{amsmath}
 \usepackage{enumitem}
 \usepackage{graphicx}
 \usepackage{float}
 \usepackage{xcolor}
 \usepackage{titlesec}
 \usepackage{fancyhdr}
-\usepackage[most]{tcolorbox}
+
 \usepackage{hyperref}
 \usepackage{booktabs}
 
@@ -45,11 +46,6 @@
 \fancyfoot[R]{\footnotesize\color{gris}\thepage}
 \renewcommand{\headrulewidth}{0pt}
 \renewcommand{\footrulewidth}{0.4pt}
-
-% Caja de información de la evaluación (escala de grises):
-\newtcolorbox{infobox}[1][Información de la evaluación]{colback=black!3,colframe=negro,
-  fonttitle=\bfseries,coltitle=white,title={#1},boxrule=0.6pt,arc=1pt,
-  left=8pt,right=8pt,top=6pt,bottom=6pt,breakable}
 
 % ===================== Datos del grupo ==============================
 \newcommand{\proyTitulo}{Predicción de riesgo de enfermedad coronaria a 10 años}
@@ -98,20 +94,14 @@ Repositorio GitHub:  & \proyRepo \\
 
 \clearpage
 \pagenumbering{arabic}
-\begin{infobox}
-\textbf{Fase del proyecto:} Fase 2: Búsqueda y recopilación de información\\
-\textbf{Modalidad:} Grupal (3--4 integrantes)\qquad\textbf{Ponderación:} 20\,\% de la nota final\\
-\textbf{Entregables:} Informe PDF (máx.\ 8 págs., sin anexos) \ \textperiodcentered\ Notebook \texttt{.ipynb}\ \textperiodcentered\ Repositorio GitHub\\
-\textbf{Resultado de aprendizaje (RA1):} aplicar probabilidad e inferencia estadística en problemas de decisión bajo incertidumbre.\\
-\textbf{Indicadores:} ID1.2, ID1.3, ID1.4.\\
-\textbf{Recuerden:} los resultados de esta sumativa serán la entrada de S2 y S3.
-\end{infobox}
 
-\vspace{0.5em}
-\tableofcontents
 
 % =====================================================================
 \section{Preparación y carga de datos}
+
+El problema es anticipar el riesgo de CHD a diez años, con atención primaria como contexto de
+aplicación propuesto. Esta fase caracteriza los datos, estima parámetros y contrasta asociaciones
+preliminares; no valida todavía un predictor clínico.
 
 El proyecto utiliza la versión pública en Kaggle del \textbf{Framingham Heart Study} (Dileep, s.f.),
 uno de los estudios de cohorte cardiovascular más influyentes (Mahmood et~al., 2014). Reúne
@@ -123,14 +113,15 @@ medidos al inicio del seguimiento. El conjunto se carga en Python con \texttt{ka
 variable ordinal (nivel educativo, 1 a 4), un conteo (cigarrillos por día) y siete variables numéricas
 (edad, colesterol total, presión sistólica y diastólica, IMC, frecuencia cardíaca y glucosa).
 
-La revisión de calidad muestra un conjunto limpio en estructura. No hay filas duplicadas ni
+La revisión de calidad muestra un conjunto limpio en estructura. La educación respeta los códigos 1--4 y no se detectan valores no positivos en las mediciones
+numéricas ni conteos negativos de cigarrillos. Estas reglas no certifican plausibilidad clínica. No hay filas duplicadas ni
 inconsistencias entre variables relacionadas: ninguna presión diastólica iguala o supera a la sistólica,
 el hábito de fumar es coherente con los cigarrillos por día y las binarias solo toman los valores 0 y 1.
-Hay \textbf{datos faltantes en siete variables} (Figura~\ref{fig:panorama}b): la glucosa concentra 388
+Hay \textbf{datos faltantes en siete variables} (detalle por variable en el notebook): la glucosa concentra 388
 (9{,}2\,\%) y el nivel educativo 105 (2{,}5\,\%); el resto no supera el 1{,}3\,\%. En total, 582 filas
 (13{,}7\,\%) tienen al menos un faltante. Para orientar su tratamiento se comparó la tasa de CHD con y sin
-dato de glucosa: la diferencia no es significativa ($\chi^2=1{,}58$; $p=0{,}21$), un indicio de que la
-pérdida no depende del desenlace. Los valores extremos según la regla de Tukey van de 1{,}3\,\%
+dato de glucosa: la diferencia no es significativa ($\chi^2=1{,}58$; $p=0{,}21$), sin evidencia suficiente para rechazar la independencia. Esto no identifica el mecanismo de
+ausencia ni descarta sesgo por trabajar con casos disponibles. Los valores extremos según la regla de Tukey van de 1{,}3\,\%
 (colesterol) a 4{,}9\,\% (glucosa) de las observaciones y son clínicamente plausibles: los 34 registros con
 glucosa de 200 mg/dL o más corresponden todos a personas diabéticas. La Tabla~\ref{tab:limpieza}
 documenta las decisiones.
@@ -145,9 +136,9 @@ documenta las decisiones.
 \textbf{Situación} & \textbf{Decisión} \\
 \midrule
 Faltantes en 7 variables (13{,}7\,\% de las filas) & Se trabaja con los casos disponibles de cada variable; la imputación se aborda en el modelamiento. \\
-Glucosa faltante (9{,}2\,\%) & No se asocia con CHD ($p=0{,}21$); se usan los casos con dato. \\
+Glucosa faltante (9{,}2\,\%) & No se detectó asociación con CHD ($p=0{,}21$); no se demuestra ausencia aleatoria. Se usan casos disponibles. \\
 Cigarrillos por día faltantes (29) & Los 29 son fumadores actuales; podrán imputarse con la mediana de los fumadores. \\
-Valores extremos (Tukey) & Se conservan por ser plausibles (glucosa $\geq200$ solo en diabéticos); se usa la mediana como referencia y en los gráficos se recorta la cola solo para visualizar. \\
+Valores extremos (Tukey) & Se conservan por ser plausibles (glucosa $\geq200$ solo en diabéticos); se usa la mediana como referencia y las distribuciones se muestran sin modificar los valores. \\
 Duplicados e inconsistencias & No se detectaron; no requieren tratamiento. \\
 \bottomrule
 \end{tabular}
@@ -188,34 +179,34 @@ Glucosa (mg/dL)            & 81{,}97  & 78{,}00  & 23{,}96 & 40       & 394     
 Entre las variables categóricas (Tabla~\ref{tab:binarias}), el 42{,}9\,\% son hombres, el 49{,}4\,\% fuma
 y el 31{,}1\,\% tiene hipertensión prevalente. La tasa de CHD es mayor en quienes tienen cada antecedente,
 salvo el tabaquismo, que casi no la cambia. El nivel educativo se concentra en el nivel 1 (41{,}6\,\%), que
-tiene además la mayor tasa de CHD (18{,}8\,\%). La variable objetivo está \textbf{desbalanceada}: 644
-participantes (15{,}2\,\%) desarrollan CHD, unas 5{,}6 personas sanas por cada caso
-(Figura~\ref{fig:panorama}a).
+tiene además la mayor tasa de CHD (18{,}8\,\%). Las frecuencias educativas sobre 4.133 casos válidos son nivel 1: 1.720 (41{,}6\,\%); nivel 2: 1.253 (30{,}3\,\%); nivel 3: 687 (16{,}6\,\%); nivel 4: 473 (11{,}4\,\%). Hay 105 faltantes. La variable objetivo está \textbf{desbalanceada}: 644
+participantes (15{,}2\,\%) desarrollan CHD, unas 5{,}6 personas sin CHD registrada por cada caso.
+La Figura~\ref{fig:categoricas} representa las demás categóricas; la distribución del objetivo también se grafica en el notebook.
 
 \begin{table}[H]
-\centering
-\small
-\caption{Variables binarias: prevalencia y tasa de CHD a 10 años según el atributo.}
+\centering\small
+\caption{Frecuencias de las variables binarias. El porcentaje usa casos válidos; 0: sin atributo, 1: con atributo (sexo: mujer/hombre).}
 \label{tab:binarias}
-\begin{tabular}{lrrr}
+\begin{tabular}{lrrrrr}
 \toprule
-\textbf{Variable} & \textbf{\% con atributo} & \textbf{\% CHD (con)} & \textbf{\% CHD (sin)} \\
+\textbf{Variable} & \textbf{$n_0$} & \textbf{$n_1$} & \textbf{$n$ válido} & \textbf{Faltantes} & \textbf{\% con atributo} \\
 \midrule
-Sexo masculino               & 42{,}9 & 18{,}9 & 12{,}4 \\
-Fumador actual               & 49{,}4 & 15{,}9 & 14{,}5 \\
-Medicación antihipertensiva  & 3{,}0  & 33{,}1 & 14{,}6 \\
-ACV previo                   & 0{,}6  & 44{,}0 & 15{,}0 \\
-Hipertensión prevalente      & 31{,}1 & 24{,}7 & 10{,}9 \\
-Diabetes                     & 2{,}6  & 36{,}7 & 14{,}6 \\
+Sexo masculino & 2.419 & 1.819 & 4.238 & 0 & 42{,}9 \\
+Fumador actual & 2.144 & 2.094 & 4.238 & 0 & 49{,}4 \\
+Medicación antihipertensiva & 4.061 & 124 & 4.185 & 53 & 3{,}0 \\
+ACV previo & 4.213 & 25 & 4.238 & 0 & 0{,}6 \\
+Hipertensión prevalente & 2.922 & 1.316 & 4.238 & 0 & 31{,}1 \\
+Diabetes & 4.129 & 109 & 4.238 & 0 & 2{,}6 \\
+CHD a diez años & 3.594 & 644 & 4.238 & 0 & 15{,}2 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.92\linewidth]{figuras/fig_panorama.png}
-\caption{(a) Distribución de la variable objetivo. (b) Porcentaje de datos faltantes por variable.}
-\label{fig:panorama}
+\includegraphics[width=\linewidth]{figuras/fig_categoricas_informe.png}
+\caption{Frecuencias relativas: (a) presencia de atributos binarios; (b) nivel educativo, con conteos absolutos. Los denominadores excluyen faltantes.}
+\label{fig:categoricas}
 \end{figure}
 
 La Figura~\ref{fig:distribuciones} confirma las formas: la edad se reparte de forma aproximadamente
@@ -225,7 +216,7 @@ simétrica en torno a 50 años, mientras que el colesterol y la presión sistól
 \begin{figure}[H]
 \centering
 \includegraphics[width=\linewidth]{figuras/fig_distribuciones.png}
-\caption{Distribución de tres variables numéricas, con su media o mediana de referencia (colesterol recortado al percentil 99 solo para visualizar).}
+\caption{Distribución de tres variables numéricas, con su media o mediana de referencia (valores completos, sin recorte de la cola).}
 \label{fig:distribuciones}
 \end{figure}
 
@@ -245,13 +236,13 @@ coeficiente phi (binaria con binaria).
 \label{fig:correlacion}
 \end{figure}
 
-Como la correlación resume mal la relación con un desenlace binario poco frecuente, se construyeron dos
+Para complementar las correlaciones con tasas por grupos, se construyeron dos
 variables categóricas: el tramo etario (decenios) y la categoría de presión sistólica, con cortes cercanos a
-los umbrales clínicos (normal bajo 120 mmHg, elevada de 120 a 129 e hipertensión desde 130; Whelton et~al.,
+los umbrales clínicos (cortes de 120, 130, 140 y 160 mmHg, sin constituir un diagnóstico; Whelton et~al.,
 2018). La Figura~\ref{fig:bivariado} muestra que la tasa de CHD crece de forma \textbf{monótona} con ambas:
 del 4{,}1\,\% entre los 32 y 39 años al 27{,}7\,\% entre los 60 y 70 (casi siete veces más), y del 8{,}5\,\%
-bajo 120 mmHg al 30{,}8\,\% desde 160 mmHg. Son relaciones mucho más marcadas de lo que sugieren sus
-correlaciones, y señalan a la edad y la presión arterial como los ejes del riesgo.
+bajo 120 mmHg al 30{,}8\,\% desde 160 mmHg. Las tasas y correlaciones describen aspectos distintos de las asociaciones observadas; no establecen
+efectos independientes ni causales.
 
 \begin{figure}[H]
 \centering
@@ -264,10 +255,9 @@ correlaciones, y señalan a la edad y la presión arterial como los ejes del rie
 \section{Estimación de parámetros}
 
 Se estimaron cuatro parámetros poblacionales con un 95\,\% de confianza (Tabla~\ref{tab:ic}). Para las medias
-de tres variables numéricas se usó el intervalo basado en la aproximación normal,
-$\bar{x}\pm z_{0{,}975}\,EE$ con $EE=s/\sqrt{n}$, justificado por el Teorema Central del Límite dado el tamaño
-de la muestra (Wasserman, 2004). Para la proporción de CHD se usó la misma aproximación (método de Wald),
-$\hat{p}\pm z_{0{,}975}\sqrt{\hat{p}(1-\hat{p})/n}$. Cada intervalo usa los casos disponibles, sin imputar.
+de tres variables numéricas se usó $\bar{x}\pm t_{0{,}975;n-1}\,s/\sqrt{n}$, porque la desviación
+poblacional es desconocida; el tamaño muestral respalda la aproximación para medias (Wasserman, 2004).
+Para la proporción de CHD se usó Wilson, comparándolo con Wald en el notebook. Cada intervalo usa los casos disponibles, sin imputar.
 
 \begin{table}[H]
 \centering
@@ -279,36 +269,37 @@ $\hat{p}\pm z_{0{,}975}\sqrt{\hat{p}(1-\hat{p})/n}$. Cada intervalo usa los caso
 \toprule
 \textbf{Parámetro} & \textbf{Estimación} & \textbf{IC 95\,\%} & \textbf{Mediana} & \textbf{$n$} & \textbf{Método} \\
 \midrule
-Edad media (años)              & 49{,}58     & [49{,}33; 49{,}84]          & 49  & 4.238 & Normal (TCL) \\
-Colesterol total medio (mg/dL) & 236{,}72    & [235{,}37; 238{,}07]        & 234 & 4.188 & Normal (TCL) \\
-Presión sistólica media (mmHg) & 132{,}35    & [131{,}69; 133{,}02]        & 128 & 4.238 & Normal (TCL) \\
-Proporción de CHD a 10 años    & 15{,}20\,\% & [14{,}12\,\%; 16{,}28\,\%]  & --  & 4.238 & Normal (Wald) \\
+Edad media (años)              & 49{,}58     & [49{,}33; 49{,}84]          & 49  & 4.238 & Student \\
+Colesterol total medio (mg/dL) & 236{,}72    & [235{,}37; 238{,}07]        & 234 & 4.188 & Student \\
+Presión sistólica media (mmHg) & 132{,}35    & [131{,}69; 133{,}02]        & 128 & 4.238 & Student \\
+Proporción de CHD a 10 años    & 15{,}20\,\% & [14{,}15\,\%; 16{,}31\,\%]  & --  & 4.238 & Wilson \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 Los intervalos son estrechos por el tamaño muestral. Con un 95\,\% de confianza, la edad media poblacional
 está entre 49{,}33 y 49{,}84 años, la presión sistólica media entre 131{,}69 y 133{,}02 mmHg y la proporción
-de personas que desarrollan CHD a 10 años entre 14{,}12\,\% y 16{,}28\,\%; el intervalo de Wilson, alternativa
-para proporciones, prácticamente coincide ([14{,}15\,\%; 16{,}31\,\%]).
+de personas que desarrollan CHD a 10 años entre 14{,}15\,\% y 16{,}31\,\% (Wilson); Wald ofrece valores muy próximos
+([14{,}12\,\%; 16{,}28\,\%]).
 
 La estimación tiene \textbf{limitaciones} que conviene declarar. El colesterol y la presión sistólica son
 asimétricos: el TCL respalda la normalidad de la \textit{media muestral}, pero la media queda por sobre el
 valor típico, por eso se informa también la mediana. El colesterol se estimó sin 50 casos faltantes
-(1{,}2\,\%); si la pérdida no fuera aleatoria podría introducir un sesgo, aunque pequeño. Por último, los
-intervalos suponen que la muestra representa a la población de interés, y la cohorte proviene de una sola
+(1{,}2\,\%); si la pérdida no fuera aleatoria podría introducir un sesgo cuya magnitud no se deduce solo del porcentaje faltante. Por último, los
+intervalos suponen independencia y que la muestra representa a la población de interés, y la cohorte proviene de una sola
 ciudad de Estados Unidos, por lo que la generalización debe hacerse con cautela.
 
 % =====================================================================
 \section{Pruebas de hipótesis}
 
 Se aplicaron tres pruebas con nivel de significancia $\alpha=0{,}05$, valor habitual en estudios aplicados
-que equilibra los errores de tipo I y II, eligiendo el procedimiento según el tipo de variable. El tamaño del
+fijado para esta fase exploratoria. Controla el error de tipo I por contraste bajo sus supuestos,
+pero no determina el error de tipo II ni la potencia. Se añade Holm para las tres pruebas sustantivas. El tamaño del
 efecto se interpreta con los criterios de Cohen (1988).
 
 \subsection{Prueba 1: diferencia de edad entre quienes desarrollan CHD y quienes no}
 $$H_0:\ \mu_{\text{CHD}} = \mu_{\text{no CHD}} \qquad \text{vs.} \qquad H_1:\ \mu_{\text{CHD}} \neq \mu_{\text{no CHD}}$$
-\textbf{Supuestos.} Los grupos son independientes, la edad es aproximadamente simétrica en ambos (asimetría
+\textbf{Supuestos.} Se asume independencia entre personas; el archivo no verifica parentesco o agrupamiento. La edad es aproximadamente simétrica en ambos (asimetría
 de $-0{,}25$ y $0{,}32$) y, con 644 y 3.594 personas, el TCL respalda la prueba \textit{t}. Como los tamaños son
 muy dispares, se usa la prueba \textit{t} de Welch, que no asume varianzas iguales (Welch, 1947); la prueba de
 Levene no detecta diferencia de varianzas al 5\,\% ($p=0{,}053$) y la \textit{t} de Student lleva a la misma
@@ -322,13 +313,14 @@ La edad es un marcador de riesgo relevante, pero por sí sola no separa nítidam
 \subsection{Prueba 2: asociación entre hipertensión prevalente y CHD}
 $$H_0:\ \text{hipertensión prevalente y CHD son independientes} \qquad \text{vs.} \qquad H_1:\ \text{están asociadas}$$
 \textbf{Supuestos.} Se usa la prueba $\chi^2$ de independencia sobre una tabla de $2\times2$ con observaciones
-independientes; la frecuencia esperada mínima es 200, muy por encima del umbral de 5.
+independientes (supuesto de diseño); la frecuencia esperada mínima es 200, por encima de 5.
+La prueba incorpora Yates; $V$ de Cramér utiliza el estadístico sin corrección.
 
 \textbf{Resultado.} El 24{,}7\,\% de quienes tienen hipertensión desarrolla CHD, frente al 10{,}9\,\% de quienes
 no (Figura~\ref{fig:hipotesis}b). La asociación es significativa ($\chi^2=132{,}6$; gl $=1$; $p<0{,}001$), por
 lo que \textbf{se rechaza $H_0$}, con intensidad débil ($V$ de Cramér $=0{,}18$). El riesgo relativo es de 2{,}26
-y la razón de momios de 2{,}68: la hipertensión más que duplica el riesgo y es un criterio simple y accionable
-para priorizar el seguimiento.
+y la razón de momios de 2{,}68. Son asociaciones crudas: el mayor riesgo observado requiere
+análisis con ajuste por confusión antes de orientar decisiones clínicas.
 
 \subsection{Prueba 3: asociación entre sexo y CHD}
 $$H_0:\ \text{sexo y CHD son independientes} \qquad \text{vs.} \qquad H_1:\ \text{están asociados}$$
@@ -337,9 +329,9 @@ mínima es 276, por lo que el supuesto se cumple.
 
 \textbf{Resultado.} El 18{,}9\,\% de los hombres desarrolla CHD, frente al 12{,}4\,\% de las mujeres. La
 asociación es significativa ($\chi^2=32{,}6$; gl $=1$; $p<0{,}001$), por lo que \textbf{se rechaza $H_0$}, aunque
-con intensidad muy débil ($V=0{,}09$; riesgo relativo de 1{,}52 y razón de momios de 1{,}64). La diferencia no se
-explica por la edad ni por la hipertensión, que son prácticamente iguales entre sexos (49{,}3 frente a 49{,}8
-años; 31{,}3\,\% frente a 30{,}8\,\%). El sexo aporta una señal propia, más débil que la edad o la hipertensión.
+con intensidad muy débil ($V=0{,}09$; riesgo relativo de 1{,}52 y razón de momios de 1{,}64). La edad media y la proporción de hipertensión son similares entre sexos, pero comparar estos
+resúmenes no descarta confusión. La asociación no está ajustada y no demuestra una señal independiente.
+El notebook presenta IC individuales de RR, OR y diferencias de riesgo; Holm mantiene las tres decisiones.
 
 \begin{figure}[H]
 \centering
@@ -351,24 +343,22 @@ años; 31{,}3\,\% frente a 30{,}8\,\%). El sexo aporta una señal propia, más d
 % =====================================================================
 \section{Informe de avance del proyecto}
 
-El problema es de decisión bajo incertidumbre: anticipar, en atención primaria, qué personas tienen mayor
-probabilidad de desarrollar enfermedad coronaria en diez años, para priorizar su control y prevención. En esta
-fase se revisó la calidad de los datos y se documentó su tratamiento, se caracterizó el conjunto con
+En esta fase se revisó la calidad de los datos y se documentó su tratamiento, se caracterizó el conjunto con
 estadística descriptiva y gráficos según el tipo de variable, se exploraron relaciones bivariadas con
 variables derivadas, se estimaron parámetros con intervalos de confianza y se contrastaron tres hipótesis
 con la prueba \textit{t} de Welch y la prueba $\chi^2$ de independencia. Estos resultados profundizan los de la
 Formativa 1 y son coherentes con ellos.
 
 Los resultados ofrecen tres lecturas. La \textbf{edad} y la \textbf{presión arterial} son las señales más
-claras: el riesgo crece de forma monótona con ambas y la hipertensión más que duplica la probabilidad de CHD.
-El \textbf{sexo masculino} aporta una señal adicional, más débil. En cambio, el tabaquismo casi no se asocia
+claras: el riesgo crece de forma monótona con ambas y se observa un RR crudo de 2{,}26 para hipertensión.
+El \textbf{sexo masculino} presenta una asociación cruda más débil, pendiente de ajuste. En cambio, el tabaquismo casi no se asocia
 con el desenlace de forma aislada. Como advertencias, el desbalance del objetivo (15{,}2\,\%) exigirá evaluar
 los modelos con métricas sensibles a la clase minoritaria y no solo con la exactitud, y la colinealidad entre
 presión sistólica, diastólica e hipertensión obliga a no incluirlas juntas sin más. Los datos son
 observacionales, por lo que las asociaciones no implican causalidad.
 
 Los \textbf{próximos pasos} son imputar los faltantes (glucosa, nivel educativo y cigarrillos por día en
-fumadores), evaluar el efecto de los valores extremos, validar las estimaciones mediante remuestreo en la
+fumadores), evaluar el efecto de los valores extremos, evaluar confusión con análisis multivariable, validar las estimaciones mediante remuestreo en la
 Sumativa 2 y entrenar modelos de clasificación en la Sumativa 3.
 
 % =====================================================================
@@ -377,10 +367,12 @@ Sumativa 2 y entrenar modelos de clasificación en la Sumativa 3.
 Todo el análisis se realizó en Python con \texttt{pandas} (McKinney, 2010), \texttt{numpy} (Harris et~al.,
 2020), \texttt{scipy} (Virtanen et~al., 2020) y \texttt{matplotlib} (Hunter, 2007). El cuaderno
 \texttt{Sumativa1\_\allowbreak FraminghamHeartStudy\_\allowbreak Codigo.ipynb} sigue el mismo orden de este informe, descarga los
-datos, genera todas las tablas y figuras aquí incluidas y fija la semilla 42 para asegurar la
-reproducibilidad. El código y los informes de cada evaluación están en el repositorio enlazado en la portada.
+datos si no existe una copia local, registra SHA-256 y versiones, y genera las tablas y figuras.
+La semilla es 42. Para Canvas se prepara una copia ejecutada con salidas, mientras el repositorio
+puede eliminarlas mediante \texttt{nbstripout}. El código y los informes de cada evaluación están en el repositorio enlazado en la portada.
 
 % =====================================================================
+\clearpage
 \section{Bibliografía}
 
 \begin{list}{}{\leftmargin=1.5em \itemindent=-1.5em \itemsep=0.25em \parsep=0pt}\small\raggedright
