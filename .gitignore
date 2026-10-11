@@ -10,7 +10,7 @@ __pycache__/
 .DS_Store
 .AppleDouble
 
-# Config local del editor (rutas de LaTeX específicas de cada máquina/SO)
+# Config local del editor (rutas de LaTeX especÃ­ficas de cada mÃ¡quina/SO)
 .vscode/
 
 # Credenciales
@@ -31,7 +31,7 @@ data/raw/*
 # Archivos de bloqueo temporal de Microsoft Office (se crean al abrir un .xlsx/.docx)
 ~$*
 
-# Artefactos de compilación LaTeX en redaccion/ (el PDF final vive en informes/)
+# Artefactos de compilaciÃ³n LaTeX en redaccion/ (el PDF final vive en informes/)
 redaccion/**/*.aux
 redaccion/**/*.log
 redaccion/**/*.out
@@ -42,6 +42,3 @@ redaccion/**/*.fdb_latexmk
 redaccion/**/informe.pdf
 # Salida de scratch del notebook (no hace falta para compilar el informe)
 informes/formativa-1-eda-inferencia/figuras/
-
-# Copias locales ejecutadas para Canvas (con salidas; no pasan por nbstripout)
-entrega-canvas/

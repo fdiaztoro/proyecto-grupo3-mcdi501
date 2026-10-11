@@ -11,7 +11,7 @@
 - Hipótesis: justificación de α sin afirmar que equilibra errores I/II; χ² con Yates y V de Cramér sin corrección, explicitados. IC individuales de RR/OR y diferencia de riesgos; Holm para las tres hipótesis sustantivas.
 - Interpretación: no rechazar independencia entre faltantes y CHD no demuestra ausencia aleatoria. Los efectos son asociaciones crudas; comparar promedios no descarta confusión ni demuestra una señal independiente del sexo.
 - Reproducibilidad: reutilización de CSV local, búsqueda de raíz del repositorio, SHA-256 y versiones. Carga sin avisos de tqdm ni impresión de la ruta absoluta; tablas con visualización HTML.
-- Entrega: copia ejecutada para Canvas fuera del control de versiones; notebook fuente compatible con `nbstripout`. Informe con resultados y figuras actualizados.
+- Entrega: copia ejecutada para Canvas versionada con salidas mediante una excepción de `nbstripout` en `.gitattributes`; notebook fuente compatible con `nbstripout`. Informe con resultados y figuras actualizados.
 
 ## Datos y validación
 
@@ -33,6 +33,6 @@ New-Item -ItemType Directory -Force entrega-canvas/sumativa-1
 python -m nbconvert --to notebook --execute --ExecutePreprocessor.timeout=300 --output-dir entrega-canvas/sumativa-1 informes/sumativa-1-analisis-exploratorio-inferencial/Sumativa1_FraminghamHeartStudy_Codigo.ipynb
 ```
 
-Compilar `redaccion/sumativa-1-analisis-exploratorio-inferencial/informe.tex` después de ejecutar el notebook. Revisar visualmente el PDF y confirmar máximo ocho páginas, contando la portada. Copiar el PDF aprobado junto al notebook ejecutado en `entrega-canvas/sumativa-1/`. Los archivos de esta carpeta están ignorados por Git: subir a Canvas directamente desde allí para conservar las salidas.
+Compilar `redaccion/sumativa-1-analisis-exploratorio-inferencial/informe.tex` después de ejecutar el notebook. Revisar visualmente el PDF y confirmar máximo ocho páginas, contando la portada. Copiar el PDF aprobado junto al notebook ejecutado en `entrega-canvas/sumativa-1/`. Los archivos de esta carpeta se versionan. `.gitattributes` desactiva `nbstripout` para sus notebooks, por lo que conservan las salidas al subirlos a GitHub.
 
 La primera carga necesita internet si no hay CSV local. La huella permite detectar cambios del archivo; la descarga de Kaggle no fija por sí misma una versión inmutable del dataset.

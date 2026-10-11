@@ -2,3 +2,6 @@
 *.zpln filter=nbstripout
 *.ipynb diff=ipynb
 *.ipynb text eol=lf
+
+# La entrega de Canvas conserva las salidas del notebook ejecutado.
+entrega-canvas/**/*.ipynb -filter
