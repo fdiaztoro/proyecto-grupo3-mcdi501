@@ -254,7 +254,7 @@ efectos independientes ni causales.
 % =====================================================================
 \section{Estimación de parámetros}
 
-Se estimaron cuatro parámetros poblacionales con un 95\,\% de confianza (Tabla~\ref{tab:ic}). Para las medias
+Se estimaron cuatro parámetros poblacionales mediante intervalos de confianza al 95\,\% (Tabla~\ref{tab:ic}). Para las medias
 de tres variables numéricas se usó $\bar{x}\pm t_{0{,}975;n-1}\,s/\sqrt{n}$, porque la desviación
 poblacional es desconocida; el tamaño muestral respalda la aproximación para medias (Wasserman, 2004).
 Para la proporción de CHD se usó Wilson, comparándolo con Wald en el notebook. Cada intervalo usa los casos disponibles, sin imputar.
@@ -277,10 +277,13 @@ Proporción de CHD a 10 años    & 15{,}20\,\% & [14{,}15\,\%; 16{,}31\,\%]  & -
 \end{tabular}
 \end{table}
 
-Los intervalos son estrechos por el tamaño muestral. Con un 95\,\% de confianza, la edad media poblacional
-está entre 49{,}33 y 49{,}84 años, la presión sistólica media entre 131{,}69 y 133{,}02 mmHg y la proporción
-de personas que desarrollan CHD a 10 años entre 14{,}15\,\% y 16{,}31\,\% (Wilson); Wald ofrece valores muy próximos
-([14{,}12\,\%; 16{,}28\,\%]).
+El 95\,\% describe el \textbf{procedimiento}, no un intervalo en particular: si se repitiera el muestreo
+muchas veces y en cada muestra se calculara un intervalo con este método, alrededor del 95\,\% de esos
+intervalos contendría el verdadero valor del parámetro, que es fijo. Aplicado a esta muestra, el procedimiento
+entrega [49{,}33; 49{,}84] años para la edad media, [131{,}69; 133{,}02] mmHg para la presión sistólica media y
+[14{,}15\,\%; 16{,}31\,\%] para la proporción de CHD a 10 años (Wilson; Wald ofrece valores muy próximos,
+[14{,}12\,\%; 16{,}28\,\%]). No se afirma que estos intervalos concretos contengan el parámetro con
+probabilidad 0{,}95: cada uno lo contiene o no. Son estrechos por el tamaño muestral.
 
 La estimación tiene \textbf{limitaciones} que conviene declarar. El colesterol y la presión sistólica son
 asimétricos: el TCL respalda la normalidad de la \textit{media muestral}, pero la media queda por sobre el
@@ -374,19 +377,19 @@ El código y los informes de cada evaluación están en el repositorio enlazado 
 
 % =====================================================================
 \clearpage
-\section{Bibliografía}
+\section{Bibliografía (APA 7)}
 
 \begin{list}{}{\leftmargin=1.5em \itemindent=-1.5em \itemsep=0.25em \parsep=0pt}\small\raggedright
 \item Cohen, J. (1988). \textit{Statistical power analysis for the behavioral sciences} (2.\textsuperscript{a} ed.). Lawrence Erlbaum Associates.
 \item Dileep. (s.f.). \textit{Heart disease prediction using logistic regression} [Conjunto de datos]. Kaggle. \url{https://www.kaggle.com/datasets/dileep070/heart-disease-prediction-using-logistic-regression}
-\item Harris, C. R., Millman, K. J., van der Walt, S. J., Gommers, R., Virtanen, P., Cournapeau, D., \dots\ Oliphant, T. E. (2020). Array programming with NumPy. \textit{Nature, 585}(7825), 357--362. \url{https://doi.org/10.1038/s41586-020-2649-2}
+\item Harris, C. R., Millman, K. J., van der Walt, S. J., Gommers, R., Virtanen, P., Cournapeau, D., Wieser, E., Taylor, J., Berg, S., Smith, N. J., Kern, R., Picus, M., Hoyer, S., van Kerkwijk, M. H., Brett, M., Haldane, A., Fernández del Río, J., Wiebe, M., Peterson, P., \dots\ Oliphant, T. E. (2020). Array programming with NumPy. \textit{Nature, 585}(7825), 357--362. \url{https://doi.org/10.1038/s41586-020-2649-2}
 \item Hunter, J. D. (2007). Matplotlib: A 2D graphics environment. \textit{Computing in Science \& Engineering, 9}(3), 90--95. \url{https://doi.org/10.1109/MCSE.2007.55}
 \item Mahmood, S. S., Levy, D., Vasan, R. S., \& Wang, T. J. (2014). The Framingham Heart Study and the epidemiology of cardiovascular disease: A historical perspective. \textit{The Lancet, 383}(9921), 999--1008. \url{https://doi.org/10.1016/S0140-6736(13)61752-3}
 \item McKinney, W. (2010). Data structures for statistical computing in Python. En \textit{Proceedings of the 9th Python in Science Conference} (pp.~56--61). \url{https://doi.org/10.25080/Majora-92bf1922-00a}
-\item Virtanen, P., Gommers, R., Oliphant, T. E., Haberland, M., Reddy, T., Cournapeau, D., \dots\ SciPy 1.0 Contributors. (2020). SciPy 1.0: Fundamental algorithms for scientific computing in Python. \textit{Nature Methods, 17}(3), 261--272. \url{https://doi.org/10.1038/s41592-019-0686-2}
+\item Virtanen, P., Gommers, R., Oliphant, T. E., Haberland, M., Reddy, T., Cournapeau, D., Burovski, E., Peterson, P., Weckesser, W., Bright, J., van der Walt, S. J., Brett, M., Wilson, J., Millman, K. J., Mayorov, N., Nelson, A. R. J., Jones, E., Kern, R., Larson, E., \dots\ SciPy 1.0 Contributors. (2020). SciPy 1.0: Fundamental algorithms for scientific computing in Python. \textit{Nature Methods, 17}(3), 261--272. \url{https://doi.org/10.1038/s41592-019-0686-2}
 \item Wasserman, L. (2004). \textit{All of statistics: A concise course in statistical inference}. Springer.
 \item Welch, B. L. (1947). The generalization of ``Student's'' problem when several different population variances are involved. \textit{Biometrika, 34}(1--2), 28--35. \url{https://doi.org/10.1093/biomet/34.1-2.28}
-\item Whelton, P. K., Carey, R. M., Aronow, W. S., Casey, D. E., Collins, K. J., Dennison Himmelfarb, C., \dots\ Wright, J. T. (2018). 2017 ACC/AHA/AAPA/ABC/ACPM/AGS/APhA/ASH/ASPC/NMA/PCNA guideline for the prevention, detection, evaluation, and management of high blood pressure in adults. \textit{Hypertension, 71}(6), e13--e115. \url{https://doi.org/10.1161/HYP.0000000000000065}
+\item Whelton, P. K., Carey, R. M., Aronow, W. S., Casey, D. E., Jr., Collins, K. J., Dennison Himmelfarb, C., DePalma, S. M., Gidding, S., Jamerson, K. A., Jones, D. W., MacLaughlin, E. J., Muntner, P., Ovbiagele, B., Smith, S. C., Jr., Spencer, C. C., Stafford, R. S., Taler, S. J., Thomas, R. J., Williams, K. A., Sr., \dots\ Wright, J. T., Jr. (2018). 2017 ACC/AHA/AAPA/ABC/ACPM/AGS/APhA/ASH/ASPC/NMA/PCNA guideline for the prevention, detection, evaluation, and management of high blood pressure in adults. \textit{Hypertension, 71}(6), e13--e115. \url{https://doi.org/10.1161/HYP.0000000000000065}
 \end{list}
 
 \end{document}
