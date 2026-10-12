@@ -2,3 +2,6 @@
 *.zpln filter=nbstripout
 *.ipynb diff=ipynb
 *.ipynb text eol=lf
+
+# La entrega de Canvas conserva las salidas del notebook ejecutado.
+informes/sumativa-1-analisis-exploratorio-inferencial/Sumativa1_FraminghamHeartStudy_Codigo.ipynb -filter
