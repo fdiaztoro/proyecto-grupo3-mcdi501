@@ -137,7 +137,7 @@ documenta las decisiones.
 \midrule
 Faltantes en 7 variables (13{,}7\,\% de las filas) & Se trabaja con los casos disponibles de cada variable; la imputación se aborda en el modelamiento. \\
 Glucosa faltante (9{,}2\,\%) & No se detectó asociación con CHD ($p=0{,}21$); no se demuestra ausencia aleatoria. Se usan casos disponibles. \\
-Cigarrillos por día faltantes (29) & Los 29 son fumadores actuales; podrán imputarse con la mediana de los fumadores. \\
+Cigarrillos por día faltantes (29) & 1{,}02 & Los 29 son fumadores actuales; podrán imputarse con la mediana de los fumadores. \\
 Valores extremos (Tukey) & Se conservan por ser plausibles (glucosa $\geq200$ solo en diabéticos); se usa la mediana como referencia y las distribuciones se muestran sin modificar los valores. \\
 Duplicados e inconsistencias & No se detectaron; no requieren tratamiento. \\
 \bottomrule
@@ -153,25 +153,26 @@ La Tabla~\ref{tab:descriptivos} resume las variables numéricas. La edad es la �
 moderada a la derecha, con la media por sobre la mediana, y la glucosa es la más sesgada (6{,}21), arrastrada
 por los valores altos de las personas diabéticas. En cigarrillos por día la mediana es 0 y la media 9: más
 de la mitad no fuma y la media la elevan los fumadores intensos.
+La curtosis en exceso (0 en la normal) mide el peso de las colas: es alta en glucosa (58{,}67), colesterol (4{,}13), IMC (2{,}66) y presión sistólica (2{,}16), con más valores extremos que la normal.
 
 \begin{table}[H]
 \centering
 \small
 \caption{Medidas descriptivas de las variables numéricas (casos disponibles de cada variable).}
 \label{tab:descriptivos}
-\setlength{\tabcolsep}{4.5pt}
-\begin{tabular}{lrrrrrrr}
+\setlength{\tabcolsep}{2.2pt}
+\begin{tabular}{lrrrrrrr@{\hspace{9pt}}r}
 \toprule
-\textbf{Variable} & \textbf{Media} & \textbf{Mediana} & \textbf{Desv. est.} & \textbf{Mín.} & \textbf{Máx.} & \textbf{Asimetría} & \textbf{$n$} \\
+\textbf{Variable} & \textbf{Media} & \textbf{Mediana} & \textbf{Desv. est.} & \textbf{Mín.} & \textbf{Máx.} & \textbf{Asimetría} & \textbf{Curtosis} & \textbf{$n$} \\
 \midrule
-Edad (años)                & 49{,}58  & 49{,}00  & 8{,}57  & 32       & 70       & 0{,}23 & 4.238 \\
-Cigarrillos por día        & 9{,}00   & 0{,}00   & 11{,}92 & 0        & 70       & 1{,}25 & 4.209 \\
-Colesterol total (mg/dL)   & 236{,}72 & 234{,}00 & 44{,}59 & 107      & 696      & 0{,}87 & 4.188 \\
-Presión sistólica (mmHg)   & 132{,}35 & 128{,}00 & 22{,}04 & 83{,}5   & 295      & 1{,}15 & 4.238 \\
-Presión diastólica (mmHg)  & 82{,}89  & 82{,}00  & 11{,}91 & 48       & 142{,}5  & 0{,}71 & 4.238 \\
-IMC (kg/m$^2$)             & 25{,}80  & 25{,}40  & 4{,}08  & 15{,}54  & 56{,}8   & 0{,}98 & 4.219 \\
-Frecuencia cardíaca (lpm)  & 75{,}88  & 75{,}00  & 12{,}03 & 44       & 143      & 0{,}64 & 4.237 \\
-Glucosa (mg/dL)            & 81{,}97  & 78{,}00  & 23{,}96 & 40       & 394      & 6{,}21 & 3.850 \\
+Edad (años)                & 49{,}58  & 49{,}00  & 8{,}57  & 32       & 70       & 0{,}23 & $-0{,}99$ & 4.238 \\
+Cigarrillos por día        & 9{,}00   & 0{,}00   & 11{,}92 & 0        & 70       & 1{,}25 & 1{,}02 & 4.209 \\
+Colesterol total (mg/dL)   & 236{,}72 & 234{,}00 & 44{,}59 & 107      & 696      & 0{,}87 & 4{,}13 & 4.188 \\
+Presión sistólica (mmHg)   & 132{,}35 & 128{,}00 & 22{,}04 & 83{,}5   & 295      & 1{,}15 & 2{,}16 & 4.238 \\
+Presión diastólica (mmHg)  & 82{,}89  & 82{,}00  & 11{,}91 & 48       & 142{,}5  & 0{,}71 & 1{,}28 & 4.238 \\
+IMC (kg/m$^2$)             & 25{,}80  & 25{,}40  & 4{,}08  & 15{,}54  & 56{,}8   & 0{,}98 & 2{,}66 & 4.219 \\
+Frecuencia cardíaca (lpm)  & 75{,}88  & 75{,}00  & 12{,}03 & 44       & 143      & 0{,}64 & 0{,}91 & 4.237 \\
+Glucosa (mg/dL)            & 81{,}97  & 78{,}00  & 23{,}96 & 40       & 394      & 6{,}21 & 58{,}67 & 3.850 \\
 \bottomrule
 \end{tabular}
 \end{table}
