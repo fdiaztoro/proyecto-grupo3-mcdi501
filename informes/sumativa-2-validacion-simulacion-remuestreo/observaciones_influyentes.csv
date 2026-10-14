@@ -1,0 +1,8 @@
+Variable o correlación,Fila del CSV (índice),Valor,Efecto sobre el estadístico
+glucose,2909,394.0,0.0810686533523608
+totChol,3160,696.0,0.10969152484298661
+sysBP,481,295.0,0.038387442342326494
+r Presión sistólica – diastólica,2197,,0.002046655186804913
+r Hipertensión prevalente – presión sistólica,481,,0.002093729682536405
+r Edad – CHD,781,,0.0011752577648072582
+r Presión sistólica – CHD,481,,0.002596205970648663
