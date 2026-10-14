@@ -5,7 +5,7 @@
 \usepackage[T1]{fontenc}
 
 % ===================== Página y utilidades ========================
-\usepackage[left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm]{geometry}
+\usepackage[left=2.5cm,right=2.5cm,top=2.1cm,bottom=2.1cm]{geometry}
 \usepackage{array}
 \usepackage{amsmath}
 \usepackage{enumitem}
@@ -14,6 +14,7 @@
 \usepackage{xcolor}
 \usepackage{titlesec}
 \usepackage{fancyhdr}
+\usepackage[most]{tcolorbox}
 
 \usepackage{hyperref}
 \usepackage{booktabs}
@@ -38,8 +39,8 @@
 % ===================== Estilo de títulos ===========================
 \titleformat{\section}{\large\bfseries\color{negro}}{\thesection.}{0.5em}{}
 \titleformat{\subsection}{\normalsize\bfseries\color{negro}}{\thesubsection}{0.5em}{}
-\titlespacing*{\section}{0pt}{1.4em}{0.4em}
-\titlespacing*{\subsection}{0pt}{1.0em}{0.3em}
+\titlespacing*{\section}{0pt}{0.9em}{0.3em}
+\titlespacing*{\subsection}{0pt}{0.6em}{0.2em}
 
 % ===================== Pie de página ===============================
 \pagestyle{fancy}
@@ -58,12 +59,23 @@
 \newcommand{\proyRepo}{\url{https://github.com/fdiaztoro/proyecto-grupo3-mcdi501}}
 
 \setlength{\parindent}{0pt}
-\setlength{\parskip}{0.35em}
+\setlength{\parskip}{0.2em}
 
 
 \newcommand{\guia}[1]{{\small\itshape\color{gris}#1}\par\vspace{0.15em}}
 \newcommand{\resp}[1]{{\footnotesize\itshape\color{gris}[\,Responsable: #1\,]}\par\vspace{0.3em}}
 \newcommand{\desarrolle}{{\footnotesize\itshape\color{fillgray}[\,Desarrollar aquí\,]}\par\vspace{6em}}
+
+% Caja de información de la evaluación (escala de grises):
+\newtcolorbox{infobox}[1][Información de la evaluación]{colback=black!3,colframe=negro,
+  fonttitle=\bfseries,coltitle=white,title={#1},boxrule=0.6pt,arc=1pt,
+  left=8pt,right=8pt,top=3pt,bottom=3pt,breakable}
+
+% Caja de conexión con evaluaciones previas (gris, sin color):
+\newtcolorbox{conexionbox}[1][Conexión con evaluaciones anteriores]{colback=black!6,colframe=gris,
+  fonttitle=\bfseries,coltitle=white,title={#1},boxrule=0.6pt,arc=1pt,
+  left=8pt,right=8pt,top=3pt,bottom=3pt,breakable}
+
 \begin{document}
 \pagenumbering{gobble}
 
@@ -100,6 +112,20 @@ Repositorio GitHub:  & \proyRepo \\
 
 \clearpage
 \pagenumbering{arabic}
+\begin{infobox}
+\textbf{Fase del proyecto:} Fase 3: Desarrollo del proyecto\\
+\textbf{Modalidad:} Grupal\qquad\textbf{Ponderación:} 20\,\% de la nota final\\
+\textbf{Entregables:} Informe PDF (máx.\ 7 págs.)\ \textperiodcentered\ Notebook \texttt{.ipynb}\ \textperiodcentered\ Repositorio GitHub (carpetas S1, S2 y archivo de resultados validados)\\
+\textbf{Resultado de aprendizaje (RA2):} implementar métodos computacionales de simulación y remuestreo para apoyar la toma de decisiones en escenarios complejos.\\
+\textbf{Indicadores:} ID2.1, ID2.2, ID2.3.\\
+\textbf{Prerrequisito:} Sumativa 1 completada (usarán sus resultados).
+\end{infobox}
+\begin{conexionbox}
+Esta evaluación \textbf{no es independiente}: todo el trabajo se construye explícitamente sobre los resultados de la Sumativa 1 (parámetros estimados, intervalos de confianza, pruebas de hipótesis y correlaciones).
+\end{conexionbox}
+
+\vspace{0.1em}
+\tableofcontents
 
 \noindent Esta evaluación valida con remuestreo y simulación los resultados de la Sumativa 1 (S1) sobre el Framingham Heart Study (Dileep, s.f.; $n=4.238$; variable objetivo \texttt{TenYearCHD}, con 15,2\,\% de casos). Todo parte de los resultados de S1; no se usan datos ni parámetros externos. Semilla 42, $B=10.000$ en todos los procedimientos, implementados con NumPy, pandas y SciPy (Harris et~al., 2020; McKinney, 2010; Virtanen et~al., 2020).
 
@@ -263,7 +289,7 @@ Correlación fumador--CHD ($r=0{,}02$) & IC bootstrap incluye el cero & Inestabl
 % Responsable: Pablo Ríos
 \section{Bibliografía (APA 7)}
 
-\begin{list}{}{\leftmargin=1.5em \itemindent=-1.5em \itemsep=0.25em \parsep=0pt}\small\raggedright
+\begin{list}{}{\leftmargin=1.5em \itemindent=-1.5em \itemsep=0.05em \parsep=0pt}\footnotesize\raggedright
 \item Dileep. (s.f.). \textit{Heart disease prediction using logistic regression} [Conjunto de datos]. Kaggle. \url{https://www.kaggle.com/datasets/dileep070/heart-disease-prediction-using-logistic-regression}
 \item Efron, B. (1987). Better bootstrap confidence intervals. \textit{Journal of the American Statistical Association, 82}(397), 171--185. \url{https://doi.org/10.1080/01621459.1987.10478410}
 \item Efron, B., \& Tibshirani, R. J. (1993). \textit{An introduction to the bootstrap}. Chapman \& Hall.

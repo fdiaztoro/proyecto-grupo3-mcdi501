@@ -42,3 +42,7 @@ redaccion/**/*.fdb_latexmk
 redaccion/**/informe.pdf
 # Salida de scratch del notebook (no hace falta para compilar el informe)
 informes/formativa-1-eda-inferencia/figuras/
+
+# Notas sueltas en Markdown (se mantienen los README.md)
+*.md
+!**/README.md
