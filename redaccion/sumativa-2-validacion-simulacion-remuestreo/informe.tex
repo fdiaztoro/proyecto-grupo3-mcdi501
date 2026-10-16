@@ -185,53 +185,54 @@ Se validaron las dos pruebas de S1 con 10.000 permutaciones de las etiquetas de 
 % Responsable: Guillermo Subiabre
 \section{Evaluación de estabilidad de correlaciones}
 
-Se eligieron cinco correlaciones relevantes de S1 y se calculó su IC bootstrap al 95\,\% (10.000 remuestras de filas completas, método percentil), contrastado con el IC de Fisher (1915). Se llama \emph{robusta} a la correlación cuyo intervalo es estrecho y excluye el cero, e \emph{inestable} a la que lo incluye.
+Se revisaron cinco correlaciones de S1 con 10.000 remuestras de filas completas de cada par, conservando el vínculo entre las variables y sus casos disponibles. Se calcularon IC percentil al 95\,\%, amplitudes, errores estándar y frecuencias de signo. Fisher se usa solo como referencia aproximada, especialmente en pares con indicadores binarios. La estabilidad del signo se distingue de la precisión y de la sensibilidad a extremos (sección 5); excluir cero no demuestra causalidad.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.78\linewidth]{figuras/fig_correlaciones.png}
-\caption{Correlaciones de S1 con su IC bootstrap al 95\,\%.}
+\caption{Correlaciones de S1 e IC percentil bootstrap al 95\,\%. Las distribuciones de las 10.000 réplicas se muestran en el notebook.}
 \label{fig:corr}
 \end{figure}
 
-\textbf{Resultados.} Cuatro son robustas: presión sistólica con diastólica, $r=0{,}78$ [0,77; 0,80]; hipertensión prevalente con presión sistólica, 0,70 [0,68; 0,71]; edad con CHD, 0,23 [0,20; 0,25]; y presión sistólica con CHD, 0,22 [0,18; 0,25]. La única inestable es fumador actual con CHD: $r=0{,}02$ [$-0{,}01$; 0,05], sin efecto lineal distinguible de cero, coherente con S1, donde el tabaquismo casi no cambia la tasa de CHD. La variabilidad crece cuando la correlación es más débil: el error estándar bootstrap es 0,007--0,008 en las dos más altas y 0,015--0,017 en las demás. Los intervalos de Fisher difieren de los bootstrap en hasta 0,005, otra señal de estabilidad. La correlación estable de 0,70 entre hipertensión y presión sistólica anticipa colinealidad entre ambas si se usan como predictoras en S3.
+\textbf{Cifras verificadas.} Presión sistólica--diastólica: $r=0{,}784$ [0,769; 0,799], error estándar 0,0077; hipertensión--presión sistólica: 0,697 [0,682; 0,711], 0,0075; edad--CHD: 0,225 [0,197; 0,254], 0,0147; presión sistólica--CHD: 0,216 [0,183; 0,250], 0,0172. En estos cuatro pares todas las réplicas fueron positivas y los IC excluyen cero: su signo es estable bajo el remuestreo. La relación hipertensión--presión sistólica aconseja evaluar redundancia en S3.
+
+\textbf{Fumador--CHD.} Su correlación marginal es 0,019, con IC $[-0{,}011; 0{,}049]$ y error estándar 0,0154: el IC admite valores negativos, cero y positivos pequeños. El 10,02\,\% de las réplicas tiene signo negativo y el 89,98\,\% positivo; son frecuencias bootstrap, no probabilidades sobre el parámetro verdadero. Aquí «inestable» describe la incertidumbre del signo y la falta de evidencia de una asociación marginal distinta de cero, no una variabilidad excepcional: su IC tiene amplitud 0,060, comparable a edad--CHD (0,057). No demuestra ausencia de asociación ni de aporte multivariable del tabaquismo. La independencia y el posible sesgo de los casos observados siguen siendo limitaciones.
 
 % ===================================================================
 % Responsable: Guillermo Subiabre
 \section{Simulación Monte Carlo basada en parámetros de S1}
 
-\textbf{Diseño.} Se simuló la aparición de CHD en cohortes hipotéticas con tres parámetros de S1: hipertensión prevalente $q=0{,}3105$ (definida según Whelton et~al., 2018), riesgo de CHD en hipertensos $p_1=0{,}2470$ y en no hipertensos $p_0=0{,}1092$, lo que implica una tasa esperada $q p_1+(1-q)p_0=0{,}152$ y un riesgo relativo de 2,26 (IC 95\,\% [1,97; 2,60]). En cada una de las 10.000 iteraciones, para una cohorte de $N$ personas se generó el número de hipertensos $\sim\text{Bin}(N,q)$, luego los casos de CHD en cada grupo $\sim\text{Bin}(\cdot,p_1)$ y $\text{Bin}(\cdot,p_0)$, y se calcularon la tasa de CHD, el riesgo relativo y si su IC excluía a 1. El diseño sigue las recomendaciones de Morris et~al. (2019) para estudios de simulación.
+\textbf{Origen y diseño.} Se usan solo tres estimaciones propias de S1, recalculadas del mismo CSV: $q=1.316/4.238=0{,}3105238$ (hipertensión), $p_1=325/1.316=0{,}2469605$ (CHD con hipertensión) y $p_0=319/2.922=0{,}1091718$ (CHD sin hipertensión), procedentes de la descriptiva y de la prueba hipertensión--CHD. Se utiliza \texttt{prevalentHyp} como viene codificada, sin redefinirla con umbrales externos. $N$, las 10.000 iteraciones y las tolerancias son decisiones de diseño.
+
+En cada cohorte se genera $H\sim\mathrm{Bin}(N,q)$ y, condicionado a $H$, se generan independientemente $A\sim\mathrm{Bin}(H,p_1)$ y $C\sim\mathrm{Bin}(N-H,p_0)$. Se calculan la tasa $(A+C)/N$, el RR $(A/H)/(C/(N-H))$ cuando es estimable y su IC log-normal. La tasa esperada es $q p_1+(1-q)p_0=15{,}19585\,\%$ y el RR de referencia 2,2621. Cada tamaño usa 10.000 cohortes independientes (Morris et~al., 2019).
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=\linewidth]{figuras/fig_montecarlo.png}
-\caption{Simulación para $N=1.000$: distribución de la tasa de CHD (izquierda) y convergencia de la media acumulada (derecha).}
+\caption{Para $N=1.000$, distribución de tasas entre cohortes y media acumulada frente al valor teórico de S1.}
 \label{fig:mc}
 \end{figure}
 
-\textbf{Convergencia.} Con $N=1.000$ la tasa media simulada es 15,19\,\% (teórica 15,20\,\%) y el error estándar de Monte Carlo es de solo 0,011 puntos porcentuales; la media acumulada queda dentro de $\pm0{,}05$ puntos del valor teórico desde la cohorte n.\textsuperscript{o} 1.743, así que 10.000 iteraciones son más que suficientes.
-
-\textbf{Escenarios.} La Tabla~\ref{tab:mc} muestra cómo cambia la incertidumbre con el tamaño de la cohorte. En una cohorte de 1.000 personas la tasa de CHD varía entre 13,0\,\% y 17,4\,\% (IC 95\,\%) y solo en 0,5\,\% de las cohortes supera 18,2\,\% (tres puntos sobre lo esperado). Con $N=4.238$, el riesgo relativo simulado va de 1,96 a 2,60 (percentiles 2,5 y 97,5), prácticamente igual al IC de S1: la simulación reproduce la incertidumbre de los datos reales. En cohortes pequeñas, en cambio, la asociación hipertensión--CHD solo sería detectable en 42\,\% de los casos con $N=100$, con riesgos relativos entre 0,82 y 6,53: un estudio pequeño puede pasar por alto una asociación real o exagerarla.
+\textbf{Error Monte Carlo y convergencia.} Para $N=1.000$, la tasa media es 15,19155\,\% y la desviación entre cohortes 1,13324 puntos porcentuales (pp). El error estándar Monte Carlo de la media es $s_{\mathrm{tasas}}/\sqrt{B}=0{,}0113324$ pp, con margen aproximado del 95\,\% de $\pm0{,}0222$ pp. Más iteraciones reducen este error numérico, no la dispersión entre cohortes. En esta trayectoria (semilla 42), la media acumulada permanece a menos de 0,05 pp de la teórica desde la iteración 1.743. Esto respalda la precisión final de la media, sin garantizar igual precisión para colas o RR. Superar el umbral operativo de 18,2\,\% ocurre en 0,48\,\% de las cohortes, con error estándar Monte Carlo de 0,069 pp para esa frecuencia.
 
 \begin{table}[H]
-\centering
-\small
-\caption{Resultados de la simulación según el tamaño de la cohorte.}
+\centering\small
+\caption{Intervalos centrales del 95\,\% de los resultados entre cohortes simuladas; no son IC de un parámetro poblacional. Los percentiles del RR usan solo cohortes estimables.}
 \label{tab:mc}
 \begin{tabular}{rcccc}
 \toprule
-$N$ & Tasa CHD, IC 95\,\% (\%) & Ancho (pp) & RR P2,5--P97,5 & RR signif. (\%) \\
+$N$ & Tasa CHD (\%) & RR & IC excluye 1 (\%) & RR no estimables \\
 \midrule
-100   & 9,0--23,0   & 14,0 & 0,82--6,53 & 42,2 \\
-250   & 10,8--19,6  & 8,8  & 1,26--4,15 & 77,8 \\
-500   & 12,2--18,4  & 6,2  & 1,49--3,43 & 96,7 \\
-1.000 & 13,0--17,4  & 4,4  & 1,69--3,03 & 99,98 \\
-4.238 & 14,1--16,3  & 2,2  & 1,96--2,60 & 100 \\
+100   & 9,0--23,0   & 0,82--6,53 & 42,21 & 7 \\
+250   & 10,8--19,6  & 1,26--4,15 & 77,79 & 0 \\
+500   & 12,2--18,4  & 1,49--3,43 & 96,74 & 0 \\
+1.000 & 13,0--17,4  & 1,69--3,03 & 99,98 & 0 \\
+4.238 & 14,1--16,3  & 1,97--2,60 & 100 & 0 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\textbf{Limitación.} El escenario trata los tres parámetros como valores fijos e independientes entre personas, por lo que no propaga la incertidumbre con que S1 los estimó y subestima la variabilidad real.
+\textbf{Interpretación y alcance.} Las tasas se concentran al crecer $N$. Para $N=100$, siete cohortes (0,07\,\%) no permiten calcular el RR con el procedimiento elegido por ausencia de grupo o eventos; sus percentiles usan 9.993 cohortes válidas. La frecuencia de IC que excluyen 1 usa las 10.000 cohortes y no cuenta los casos no estimables como detecciones. No garantiza significancia futura. Para $N=4.238$, el rango del RR [1,97; 2,60] es próximo al IC de S1 [1,97; 2,60]: indica coherencia bajo el modelo calibrado, no validación externa. Los parámetros se tratan como fijos; no se propaga su incertidumbre. Se supone independencia entre personas y no se modelan otros factores ni variabilidad adicional entre poblaciones.
 
 % ===================================================================
 % Responsable: Pablo Ríos
