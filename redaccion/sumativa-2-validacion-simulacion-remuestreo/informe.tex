@@ -265,23 +265,26 @@ La Tabla~\ref{tab:val} resume los resultados validados. El notebook los guarda, 
 \toprule
 \textbf{Resultado de S1} & \textbf{Evidencia de S2} & \textbf{Veredicto} \\
 \midrule
-Edad, colesterol y presión sistólica medias; proporción de CHD & IC BCa entre 0,6\,\% y 1,4\,\% de amplitud del clásico & Robusto \\
+Edad, colesterol y presión sistólica medias; proporción de CHD & El BCa se aparta del clásico entre 0,6\,\% y 1,4\,\% de su amplitud & Robusto \\
+Media de glucosa & Sensible a extremos; cobertura baja con $n\leq100$ & Cautela \\
 Mediana del colesterol & IC percentil y BCa toscos (valores enteros) & Cautela \\
-Edad y CHD (Welch); hipertensión y CHD ($\chi^2$) & $p$ de permutación $=0{,}0001$ en ambas & Robusto \\
+Edad y CHD (Welch); hipertensión y CHD ($\chi^2$) & $p$ de permutación $=0{,}0001$ en ambas; Mann--Whitney concuerda & Robusto \\
 Correlaciones PAS--PAD, hipertensión--PAS, edad--CHD & IC bootstrap sin el cero, estrechos & Robusto \\
+Correlación PAS--CHD ($r=0{,}22$) & IC sin el cero; 0,18 sin los valores altos & Signo robusto \\
 Correlación fumador--CHD ($r=0{,}02$) & IC bootstrap incluye el cero & Inestable \\
+RR hipertensión--CHD (2,26) & Monte Carlo lo reproduce con $N=4.238$ & Coherente \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\textbf{Observaciones influyentes.} La fila 481 (mujer de 64 años, presión sistólica 295 mmHg, con CHD) influye en tres resultados; la 2909 (glucosa 394 mg/dL), la 3160 (colesterol 696 mg/dL), la 2197 y la 781 afectan uno cada una. Su efecto es pequeño, pero deben registrarse.
+\textbf{Observaciones influyentes.} El registro 481 (mujer de 64 años, presión sistólica 295 mmHg, con CHD) influye en tres resultados; el 2909 (glucosa 394 mg/dL), el 3160 (colesterol 696 mg/dL), el 2197 y el 781 afectan uno cada uno. Los números son índices de pandas (desde 0; la línea del CSV es el índice más 2). Su efecto es pequeño, pero deben registrarse.
 
 \textbf{Recomendaciones para S3.}
 \begin{enumerate}[leftmargin=1.6em,itemsep=0.1em,topsep=0.2em]
 \item \emph{Predictoras estables:} edad y presión sistólica tienen asociación estable con CHD ($r\approx0{,}22$). Hipertensión prevalente y presión sistólica están muy correlacionadas ($r\approx0{,}70$): elegir una o verificar el VIF si van juntas.
 \item \emph{Tabaquismo:} su correlación marginal con el CHD no se distingue de cero; eso no permite descartarlo en un modelo multivariable, donde debe evaluarse.
-\item \emph{Valores extremos:} no eliminarlos, por ser clínicamente plausibles (S1). Para la glucosa conviene una transformación logarítmica o acotar al percentil 99.
-\item \emph{Observaciones influyentes:} ajustar los modelos con y sin las filas listadas y reportar si cambian los coeficientes.
+\item \emph{Valores extremos:} no eliminarlos, por ser clínicamente plausibles (S1). En la glucosa el logaritmo no basta (asimetría 2,25 y curtosis 12,0): conviene acotarla al percentil 99 (175 mg/dL) y, si entra junto a diabetes ($r=0{,}62$), verificar el VIF.
+\item \emph{Observaciones influyentes:} ajustar los modelos con y sin los registros listados y reportar si cambian los coeficientes.
 \item \emph{Incertidumbre del desempeño:} con 15,2\,\% de prevalencia, un conjunto de prueba del 30\,\% tiene unos 190 casos de CHD; usar partición estratificada, validación cruzada repetida e IC bootstrap para AUC, sensibilidad y precisión.
 \item \emph{Faltantes:} la glucosa (9,2\,\%) es la que más tiene; imputar con la mediana calculada solo en el conjunto de entrenamiento para no filtrar información.
 \end{enumerate}
