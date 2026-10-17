@@ -240,9 +240,9 @@ $N$ & Tasa CHD (\%) & RR & IC excluye 1 (\%) & RR no estimables \\
 
 \textbf{(a) Medias.} La media recortada al 5\,\% por cola baja 3,1\,\% en la glucosa (de 81,97 a 79,44 mg/dL; 4,9\,\% de atípicos según Tukey, 1977), 0,6\,\% en el colesterol y 1,1\,\% en la presión sistólica; sin atípicos, la media de glucosa (78,49) se acerca a su mediana (78,0), que conviene como valor típico. El jackknife (Efron y Tibshirani, 1993) muestra que la observación más influyente cambia la media en solo 0,08, 0,11 y 0,04 unidades (hasta 0,2 errores estándar); su error estándar coincide con el clásico, pero en la media eso ocurre por construcción y no aporta evidencia.
 
-\textbf{(b) Correlaciones.} Sin los atípicos de Tukey, presión sistólica--CHD baja de 0,22 a 0,18 y presión sistólica--diastólica de 0,78 a 0,75; hipertensión--presión sistólica y edad--CHD no cambian. Los 126 atípicos de presión sistólica son valores altos, plausibles y de alto riesgo (39,7\,\% con CHD frente a 15,2\,\%): quitarlos restringe el rango y baja la correlación casi por construcción, mientras Spearman, basada en rangos, da 0,19. Aportan señal real; no la inflan. Ninguna fila altera una correlación en más de 0,003 (jackknife).
+\textbf{(b) Correlaciones.} Sin los atípicos de Tukey, presión sistólica--CHD baja de 0,22 a 0,18 y presión sistólica--diastólica de 0,78 a 0,75; hipertensión--presión sistólica y edad--CHD no cambian. Los 126 atípicos de presión sistólica son valores altos, plausibles y de alto riesgo (39,7\,\% con CHD frente a 15,2\,\%): quitarlos restringe el rango (desviación de 22,0 a 18,8 mmHg) y baja la correlación casi por construcción, mientras Spearman, basada en rangos, da 0,19. Aportan señal real; no la inflan. Ninguna fila altera una correlación en más de 0,003 (jackknife).
 
-\textbf{(c) Prueba de edad.} t de Student ($p=6{,}8\times10^{-50}$), Welch ($1{,}0\times10^{-48}$), Mann--Whitney ($1{,}2\times10^{-47}$) y permutación ($p=0{,}0001$, la cota mínima) coinciden en la decisión; la probabilidad de que una persona con CHD sea mayor que una sin CHD es 0,68 (empates como mitad). La conclusión no depende de la distribución supuesta.
+\textbf{(c) Prueba de edad.} t de Student ($p=6{,}8\times10^{-50}$), Welch ($1{,}0\times10^{-48}$), Mann--Whitney ($1{,}2\times10^{-47}$) y permutación ($p=0{,}0001$, la cota mínima) coinciden en la decisión; la probabilidad de que una persona con CHD sea mayor que una sin CHD es 0,68 (empates como mitad; 0,66 sin ellos). La conclusión no depende de la distribución supuesta.
 
 \textbf{(d) Distribuciones alternativas.} Se simuló la cobertura del IC clásico de la media de glucosa (10.000 muestras por caso). Con una población lognormal con la media y desviación de S1 cubre entre 94,8\,\% y 95,2\,\% para $n$ de 30 a 3.850; con la distribución empírica (asimetría 6,2; curtosis en exceso 58,6) cae a 88,0\,\% con $n=30$ y 89,1\,\% con $n=100$, y sube a 93,5\,\% con $n=500$ y 94,5\,\% con $n=3.850$, fallando casi siempre hacia abajo. Las colas pesadas provienen de una mezcla: el 97,3\,\% no diabético es casi simétrico (asimetría 1,0) y el 2,7\,\% diabético llega a 394 mg/dL; los 34 registros de 200 mg/dL o más, todos de diabéticos, aportan el 97,7\,\% de la suma que define la curtosis. Con $n=30$, el 77\,\% de las muestras no contiene ninguno, así que su media y su desviación quedan bajas. El Teorema Central del Límite depende del tamaño de muestra y del peso de las colas: con el $n$ de S1 el IC es confiable; con $n\leq100$ habría sido optimista.
 
@@ -263,7 +263,7 @@ La Tabla~\ref{tab:val} resume los resultados validados; el notebook los guarda, 
 \toprule
 \textbf{Resultado de S1} & \textbf{Evidencia de S2} & \textbf{Veredicto} \\
 \midrule
-Medias y proporción de CHD & BCa a 0,6--1,4\,\% de la amplitud del clásico & Robusto \\
+Medias de edad, colesterol y PAS; proporción de CHD & El BCa se aparta del clásico 0,6--1,4\,\% de su amplitud & Robusto \\
 Media de glucosa & Sensible a extremos y a $n$ pequeño & Cautela \\
 Mediana del colesterol & IC percentil y BCa toscos (valores enteros) & Cautela \\
 Pruebas edad--CHD y HTA--CHD & $p$ perm.\ 0,0001; Mann--Whitney concuerda & Robusto \\
@@ -280,11 +280,11 @@ RR HTA--CHD (2,26) & Monte Carlo lo reproduce con $N=4.238$ & Coherente \\
 \textbf{Recomendaciones para S3.}
 \begin{enumerate}[leftmargin=1.4em,itemsep=0pt,parsep=0pt,topsep=0.1em]
 \item \emph{Predictoras estables:} edad y presión sistólica ($r\approx0{,}22$ con CHD). Hipertensión y presión sistólica están muy correlacionadas ($r\approx0{,}70$): elegir una o verificar el VIF.
-\item \emph{Tabaquismo:} su correlación marginal es nula, pero debe evaluarse en el modelo multivariable.
-\item \emph{Valores extremos:} no eliminarlos (plausibles, S1). En la glucosa el logaritmo no basta (asimetría 2,25; curtosis 12,0): acotar al percentil 99 (175 mg/dL) y verificar el VIF con diabetes.
-\item \emph{Observaciones influyentes:} ajustar con y sin los registros listados y comparar coeficientes.
+\item \emph{Tabaquismo:} su correlación marginal no se distingue de cero, pero eso no permite descartarlo: debe evaluarse en el modelo multivariable.
+\item \emph{Valores extremos:} no eliminarlos (plausibles, S1). En la glucosa el logaritmo no basta (asimetría 2,25; curtosis 12,0): acotar al percentil 99 (175 mg/dL) y verificar el VIF con diabetes ($r=0{,}62$).
+\item \emph{Observaciones influyentes:} ajustar los modelos con y sin los registros listados y reportar si cambian los coeficientes.
 \item \emph{Desempeño:} con 15,2\,\% de prevalencia, un 30\,\% de prueba tiene unos 190 casos; usar partición estratificada, validación cruzada repetida e IC bootstrap para AUC, sensibilidad y precisión.
-\item \emph{Faltantes:} imputar la glucosa (9,2\,\%) con la mediana del entrenamiento.
+\item \emph{Faltantes:} imputar la glucosa (9,2\,\%) con la mediana calculada solo en el conjunto de entrenamiento, para no filtrar información al de prueba.
 \end{enumerate}
 
 % ===================================================================
