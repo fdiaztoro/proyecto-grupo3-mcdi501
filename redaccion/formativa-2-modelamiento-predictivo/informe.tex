@@ -9,6 +9,7 @@
 \usepackage{array}
 \usepackage{enumitem}
 \usepackage{graphicx}
+\usepackage{float}
 \usepackage{xcolor}
 \usepackage{titlesec}
 \usepackage{fancyhdr}
@@ -202,7 +203,32 @@ Todos los VIF están muy por debajo del umbral de 5: no hay evidencia de multico
 \guia{(30 pts) Generen predicciones sobre el conjunto de prueba; construyan y visualicen la matriz de confusión; calculen e interpreten accuracy, precision, recall y F1-score en el contexto del problema. Generen la curva ROC, calculen el AUC e interprétenlo según los rangos de referencia.}
 
 \subsection{Matriz de confusión y métricas}
-\resp
+Con el modelo de 2.2 se predijo la probabilidad de CHD de los 1.272 participantes de prueba y se clasificó como CHD con el umbral por defecto de 0,5 (Figura~\ref{fig:conf}). De los 193 casos reales (15,2\,\%), el modelo marca como CHD solo a 23 personas (9 verdaderos y 14 falsos positivos) y deja pasar a 184 (falsos negativos).
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.45\linewidth]{figuras/fig_confusion.png}
+\caption{Matriz de confusión en el conjunto de prueba (umbral 0,5).}
+\label{fig:conf}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\small
+\caption{Métricas de clasificación en el conjunto de prueba (clase CHD).}
+\begin{tabular}{lr}
+\toprule
+\textbf{Métrica} & \textbf{Valor} \\
+\midrule
+Accuracy & 0,844 \\
+Precision & 0,391 \\
+Recall (sensibilidad) & 0,047 \\
+F1-score & 0,083 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+La accuracy (84,4\,\%) es engañosa: un clasificador trivial que dijera ``sin CHD'' para todos alcanzaría 84,8\,\%, algo más. La precision (39,1\,\%) es más del doble de la prevalencia, pero se basa en muy pocas predicciones positivas. El recall es la métrica crítica en salud, porque no detectar a quien desarrollará CHD es el error más costoso, y aquí es de solo 4,7\,\% (9 de 193). El F1 (0,083) refleja ese desequilibrio. Con una prevalencia de 15,2\,\% la probabilidad predicha casi nunca supera 0,5, así que el umbral por defecto no es adecuado; el AUC de 3.2 muestra que el modelo sí ordena a los participantes por riesgo. Para S3 conviene ponderar las clases y elegir el umbral con criterio.
 
 \subsection{Curva ROC y AUC}
 \begin{center}
