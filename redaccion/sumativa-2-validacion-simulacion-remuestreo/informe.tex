@@ -252,7 +252,9 @@ $N$ & Tasa CHD (\%) & RR & IC excluye 1 (\%) & RR no estimables \\
 % Responsable: Pablo Ríos
 \section{Preparación para la Sumativa 3}
 
-La Tabla~\ref{tab:val} resume los resultados validados; el notebook los guarda, con las observaciones influyentes, en \texttt{resultados\_validados.csv} y \texttt{observaciones\_influyentes.csv}.
+\begin{sloppypar}
+La Tabla~\ref{tab:val} resume los resultados validados; el notebook los guarda, con las observaciones influyentes, en \texttt{resultados\_\allowbreak validados.csv} y \texttt{observaciones\_\allowbreak influyentes.csv}. Para que S3 parta de los mismos datos, el CSV analizado (4.238 filas, versión 1 de Kaggle, SHA-256 \texttt{40921748\ldots}) se versiona en el repositorio como \texttt{data/\allowbreak raw/\allowbreak framingham.csv}, porque Kaggle puede entregar copias distintas del dataset; los notebooks verifican su huella antes de analizar.
+\end{sloppypar}
 
 \begin{table}[H]
 \centering
