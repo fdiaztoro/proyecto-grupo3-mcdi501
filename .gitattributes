@@ -6,3 +6,6 @@
 # La entrega de Canvas conserva las salidas del notebook ejecutado.
 informes/sumativa-1-analisis-exploratorio-inferencial/Sumativa1_FraminghamHeartStudy_Codigo.ipynb -filter
 informes/sumativa-2-validacion-simulacion-remuestreo/Sumativa2_FraminghamHeartStudy_Codigo.ipynb -filter
+
+# Copia versionada del dataset: se guarda byte a byte (sin convertir CRLF) para que su SHA-256 sea el mismo en todo sistema.
+data/raw/framingham.csv -text
