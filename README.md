@@ -46,8 +46,9 @@ proyecto-grupo3-mcdi501/
 ├── .mailmap                                               # nombres canónicos para el historial de commits
 │
 ├── data/
-│   ├── README.md                                        # cómo obtener el dataset
-│   └── raw/                                              # dataset original (ignorado por git)
+│   ├── README.md                                        # fuente, versión y verificación del dataset
+│   └── raw/
+│       └── framingham.csv                               # copia versionada del dataset (SHA-256 en data/README.md)
 │
 ├── plantillas/                                           # plantillas LaTeX del docente, sin tocar (una por evaluación)
 │   ├── formativa-1-eda-inferencia/
