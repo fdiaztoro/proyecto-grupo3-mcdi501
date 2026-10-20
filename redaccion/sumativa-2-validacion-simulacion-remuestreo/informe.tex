@@ -1,0 +1,312 @@
+\documentclass[11pt,a4paper]{article}
+
+% ===================== Codificación y fuentes =====================
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+% ===================== Página y utilidades ========================
+\usepackage[left=2.5cm,right=2.5cm,top=2.1cm,bottom=2.1cm]{geometry}
+\usepackage{array}
+\usepackage{amsmath}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage[most]{tcolorbox}
+
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{caption}
+\captionsetup{font=small,skip=3pt}
+
+% ===================== Etiquetas en español (sin babel) ===========
+\renewcommand{\contentsname}{Índice}
+\renewcommand{\figurename}{Figura}
+\renewcommand{\tablename}{Tabla}
+\renewcommand{\refname}{Bibliografía}
+
+% ===================== Escala de grises (sin color) ================
+\definecolor{negro}{RGB}{0,0,0}
+\definecolor{gris}{RGB}{90,90,90}
+\definecolor{grisclaro}{RGB}{150,150,150}
+\definecolor{fillgray}{RGB}{175,175,175}
+
+% ===================== Hipervínculos (negro) =======================
+\hypersetup{colorlinks=true, linkcolor=negro, urlcolor=negro, citecolor=negro}
+
+% ===================== Estilo de títulos ===========================
+\titleformat{\section}{\large\bfseries\color{negro}}{\thesection.}{0.5em}{}
+\titleformat{\subsection}{\normalsize\bfseries\color{negro}}{\thesubsection}{0.5em}{}
+\titlespacing*{\section}{0pt}{0.9em}{0.3em}
+\titlespacing*{\subsection}{0pt}{0.6em}{0.2em}
+
+% ===================== Pie de página ===============================
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot[L]{\footnotesize\color{gris}Magíster en Ciencia de Datos e Inteligencia Artificial}
+\fancyfoot[R]{\footnotesize\color{gris}\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% ===================== Datos del grupo ==============================
+\newcommand{\proyTitulo}{Predicción de riesgo de enfermedad coronaria a 10 años}
+\newcommand{\proyIntegrantes}{Felipe Díaz Toro, Pablo Ríos Passteni, Guillermo Subiabre Chacón, Ninoska Yévenes Hernández}
+\newcommand{\proyDataset}{Framingham Heart Study (Riesgo Cardiovascular)}
+\newcommand{\proyDocente}{Jean Paul Maidana}
+\newcommand{\proyFecha}{17/10/2026}
+\newcommand{\proyRepo}{\url{https://github.com/fdiaztoro/proyecto-grupo3-mcdi501}}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.2em}
+
+
+\newcommand{\guia}[1]{{\small\itshape\color{gris}#1}\par\vspace{0.15em}}
+\newcommand{\resp}[1]{{\footnotesize\itshape\color{gris}[\,Responsable: #1\,]}\par\vspace{0.3em}}
+\newcommand{\desarrolle}{{\footnotesize\itshape\color{fillgray}[\,Desarrollar aquí\,]}\par\vspace{6em}}
+
+% Caja de información de la evaluación (escala de grises):
+\newtcolorbox{infobox}[1][Información de la evaluación]{colback=black!3,colframe=negro,
+  fonttitle=\bfseries,coltitle=white,title={#1},boxrule=0.6pt,arc=1pt,
+  left=8pt,right=8pt,top=3pt,bottom=3pt,breakable}
+
+% Caja de conexión con evaluaciones previas (gris, sin color):
+\newtcolorbox{conexionbox}[1][Conexión con evaluaciones anteriores]{colback=black!6,colframe=gris,
+  fonttitle=\bfseries,coltitle=white,title={#1},boxrule=0.6pt,arc=1pt,
+  left=8pt,right=8pt,top=3pt,bottom=3pt,breakable}
+
+\begin{document}
+\pagenumbering{gobble}
+
+\thispagestyle{empty}
+\begin{center}
+\vspace*{1.0cm}
+\includegraphics[height=4.4cm]{logo_unab.png}\\[1.3cm]
+
+{\footnotesize\color{gris}\MakeUppercase{Magíster en Ciencia de Datos e Inteligencia Artificial}}\\[0.15cm]
+{\footnotesize\color{grisclaro}MCDI501: Estadística Computacional para la Toma de Decisiones}\\[2.0cm]
+
+{\Large\bfseries\color{negro} Evaluación Sumativa 2}\\[0.45cm]
+{\large\color{negro} Validación, Simulación y Métodos de Remuestreo}\\[1.0cm]
+
+{\Large\bfseries\color{negro} \proyTitulo}\\[0.4cm]
+{\normalsize\color{gris} Framingham Heart Study}\\[0.8cm]
+
+{\small\itshape\color{gris} Informe técnico grupal \textperiodcentered\ Grupo 3 \textperiodcentered\ 20\,\%}
+\end{center}
+
+\vspace{1.6cm}
+
+\begin{flushleft}
+\setlength{\extrarowheight}{5pt}
+\begin{tabular}{@{}>{\bfseries\color{negro}}l >{\raggedright\arraybackslash}p{11cm}@{}}
+Título del proyecto: & \proyTitulo \\
+Integrantes:         & \proyIntegrantes \\
+Dataset:             & \proyDataset \\
+Docente:             & \proyDocente \\
+Fecha:               & \proyFecha \\
+Repositorio GitHub:  & \proyRepo \\
+\end{tabular}
+\end{flushleft}
+
+\clearpage
+\pagenumbering{arabic}
+\begin{infobox}
+\textbf{Fase del proyecto:} Fase 3: Desarrollo del proyecto\\
+\textbf{Modalidad:} Grupal\qquad\textbf{Ponderación:} 20\,\% de la nota final\\
+\textbf{Entregables:} Informe PDF (máx.\ 7 págs.)\ \textperiodcentered\ Notebook \texttt{.ipynb}\ \textperiodcentered\ Repositorio GitHub (carpetas S1, S2 y archivo de resultados validados)\\
+\textbf{Resultado de aprendizaje (RA2):} implementar métodos computacionales de simulación y remuestreo para apoyar la toma de decisiones en escenarios complejos.\\
+\textbf{Indicadores:} ID2.1, ID2.2, ID2.3.\\
+\textbf{Prerrequisito:} Sumativa 1 completada (usarán sus resultados).
+\end{infobox}
+\begin{conexionbox}
+Esta evaluación \textbf{no es independiente}: todo el trabajo se construye explícitamente sobre los resultados de la Sumativa 1 (parámetros estimados, intervalos de confianza, pruebas de hipótesis y correlaciones).
+\end{conexionbox}
+
+\vspace{0.1em}
+\tableofcontents
+
+\noindent Esta evaluación valida con remuestreo y simulación los resultados de la Sumativa 1 (S1) sobre el Framingham Heart Study (Dileep, 2019; $n=4.238$; variable objetivo \texttt{TenYearCHD}, con 15,2\,\% de casos). Todo parte de los resultados de S1; no se usan datos ni parámetros externos. Semilla 42, $B=10.000$ en todos los procedimientos, implementados con NumPy, pandas y SciPy (Harris et~al., 2020; McKinney, 2010; Virtanen et~al., 2020).
+
+% ===================================================================
+% Responsable: Ninoska Yévenes
+\section{Validación de resultados de S1 mediante bootstrap}
+
+Se remuestrearon con reposición las filas disponibles de cada variable ($B=10.000$) para cuatro parámetros de S1 (edad, colesterol y presión sistólica medias, y proporción de CHD) más la mediana del colesterol, que no tiene IC clásico. Se calcularon los IC percentil y BCa (Efron, 1987), este último implementado a mano (sesgo $z_0$ y aceleración $a$ por jackknife) y contrastado con \texttt{scipy.stats.bootstrap}. El clásico es el de S1 (t de Student; Wilson para la proporción).
+
+\begin{table}[H]
+\centering
+\small
+\caption{IC al 95\,\% de los parámetros de S1: clásico, percentil y BCa.}
+\label{tab:boot}
+\begin{tabular}{lrccc}
+\toprule
+\textbf{Parámetro} & \textbf{Est.} & \textbf{Clásico (S1)} & \textbf{Percentil} & \textbf{BCa} \\
+\midrule
+Edad media (años)           & 49,58  & [49,33; 49,84]   & [49,33; 49,85]   & [49,33; 49,85] \\
+Colesterol medio (mg/dL)    & 236,72 & [235,37; 238,07] & [235,39; 238,07] & [235,41; 238,08] \\
+Presión sistólica (mmHg)    & 132,35 & [131,69; 133,02] & [131,70; 133,01] & [131,71; 133,03] \\
+Proporción de CHD (\%)      & 15,20  & [14,15; 16,31]   & [14,13; 16,30]   & [14,13; 16,30] \\
+Mediana colesterol (mg/dL)  & 234    & ---              & [232; 235]       & [232; 236] \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\linewidth]{figuras/fig_bootstrap.png}
+\caption{Distribución bootstrap de los parámetros y sus intervalos.}
+\label{fig:boot}
+\end{figure}
+
+\textbf{Discrepancias.} En las tres medias y en la proporción, los tres intervalos prácticamente coinciden: los límites difieren en centésimas y el BCa se aparta del clásico entre 0,6\,\% y 1,4\,\% de su amplitud. Los factores de corrección son pequeños ($|z_0|\leq0{,}012$; $a\leq0{,}005$): con unas 4.200 observaciones el Teorema Central del Límite ya opera, incluso en el colesterol (asimetría 0,87), y casi no hay sesgo ni asimetría que corregir. El BCa propio y el de SciPy difieren en menos de 1,5\,\% de la amplitud, lo que valida la implementación. La mediana es el caso aparte: como el colesterol se mide en enteros, su distribución bootstrap toma pocos valores distintos, el jackknife queda degenerado ($a=0$) y SciPy no logra calcular el BCa; sus intervalos son toscos y se informan con cautela.
+
+\textbf{Interpretación y supuestos.} El 95\,\% describe el \emph{procedimiento}, no un intervalo en particular: si se repitiera el muestreo muchas veces y en cada muestra se construyera un intervalo con el mismo método, cerca del 95\,\% de esos intervalos contendría el valor verdadero del parámetro, que es fijo; no se afirma que un intervalo concreto lo contenga con probabilidad 0,95. El método clásico exige una media aproximadamente normal e independencia; el percentil supone una distribución bootstrap simétrica y sin sesgo; el BCa corrige ambos, pero es más costoso y sensible a valores extremos (Efron y Tibshirani, 1993; Maidana, 2026). Como los tres coinciden, los intervalos de S1 quedan validados; la independencia entre participantes sigue siendo un supuesto que ningún método comprueba.
+
+% ===================================================================
+% Responsable: Ninoska Yévenes
+\section{Validación de pruebas de hipótesis mediante permutación}
+
+Se validaron las dos pruebas de S1 con 10.000 permutaciones de las etiquetas de CHD, que bajo $H_0$ son intercambiables (sin supuestos de distribución). (i) \emph{Edad y CHD}: la diferencia de medias observada es de 5,38 años (t de Welch = 15,58). (ii) \emph{Hipertensión prevalente y CHD}: $\chi^2=133{,}7$ sin corrección ($132{,}6$ con Yates, el valor de S1). El valor $p$ se calculó como $(1+\#\{\text{estadístico permutado}\geq\text{observado}\})/(B+1)$, de modo que no puede ser cero (Phipson y Smyth, 2010).
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{figuras/fig_permutacion.png}
+\caption{Distribución nula permutada y valor observado (línea) en las dos pruebas.}
+\label{fig:perm}
+\end{figure}
+
+\textbf{Concordancia.} Ninguna de las 10.000 permutaciones alcanza el valor observado en ninguna prueba, por lo que $p=0{,}0001$ en ambas, la cota mínima posible $1/(B+1)$. Los valores paramétricos de S1 ($1{,}0\times10^{-48}$ y $1{,}1\times10^{-30}$) son órdenes de magnitud menores, pero no son comparables en tamaño: la permutación no puede informar valores menores que $1/(B+1)$. Ambos enfoques coinciden en la decisión, que es rechazar $H_0$. Además, la distribución que supone la prueba de S1 describe bien los datos permutados: el t de Welch permutado tiene media 0,004 y desviación estándar 1,009, con cuantiles 2,5\,\% y 97,5\,\% de $-1{,}95$ y $2{,}00$ (teóricos $\pm1{,}96$); y el $\chi^2$ permutado tiene media 1,003 y cuantil 95\,\% de 3,78 (teóricos 1 y 3,84).
+
+\textbf{Cuál es más apropiado.} Con $n=4.238$ y grupos desiguales (644 casos y 3.594 sin CHD) la prueba de Welch (1947) es adecuada y entrega un valor $p$ más informativo; la permutación actúa como confirmación libre de supuestos de distribución. Ambas suponen independencia entre participantes.
+
+% ===================================================================
+% Responsable: Guillermo Subiabre
+\section{Evaluación de estabilidad de correlaciones}
+
+Se revisaron cinco correlaciones de S1 con 10.000 remuestras de filas completas de cada par, conservando el vínculo entre las variables y sus casos disponibles. Se calcularon IC percentil al 95\,\%, amplitudes, errores estándar y frecuencias de signo. El IC de Fisher (1915) se usa solo como referencia aproximada, especialmente en pares con indicadores binarios. La estabilidad del signo se distingue de la precisión y de la sensibilidad a extremos (sección 5); excluir cero no demuestra causalidad.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.78\linewidth]{figuras/fig_correlaciones.png}
+\caption{Correlaciones de S1 e IC percentil bootstrap al 95\,\%. Las distribuciones de las 10.000 réplicas se muestran en el notebook.}
+\label{fig:corr}
+\end{figure}
+
+\textbf{Cifras verificadas.} Presión sistólica--diastólica: $r=0{,}784$ [0,769; 0,799], error estándar 0,0077; hipertensión--presión sistólica: 0,697 [0,682; 0,711], 0,0075; edad--CHD: 0,225 [0,197; 0,254], 0,0147; presión sistólica--CHD: 0,216 [0,183; 0,250], 0,0172. En estos cuatro pares todas las réplicas fueron positivas y los IC excluyen cero: su signo es estable bajo el remuestreo. La relación hipertensión--presión sistólica aconseja evaluar redundancia en S3.
+
+\textbf{Fumador--CHD.} Su correlación marginal es 0,019, con IC $[-0{,}011; 0{,}049]$ y error estándar 0,0154: el IC admite valores negativos, cero y positivos pequeños. El 10,02\,\% de las réplicas tiene signo negativo y el 89,98\,\% positivo; son frecuencias bootstrap, no probabilidades sobre el parámetro verdadero. Aquí «inestable» describe la incertidumbre del signo y la falta de evidencia de una asociación marginal distinta de cero, no una variabilidad excepcional: su IC tiene amplitud 0,060, comparable a edad--CHD (0,057). No demuestra ausencia de asociación ni de aporte multivariable del tabaquismo. La independencia y el posible sesgo de los casos observados siguen siendo limitaciones.
+
+% ===================================================================
+% Responsable: Guillermo Subiabre
+\section{Simulación Monte Carlo basada en parámetros de S1}
+
+\textbf{Origen y diseño.} Se usan solo tres estimaciones propias de S1, recalculadas del mismo CSV: $q=1.316/4.238=0{,}3105238$ (hipertensión), $p_1=325/1.316=0{,}2469605$ (CHD con hipertensión) y $p_0=319/2.922=0{,}1091718$ (CHD sin hipertensión), procedentes de la descriptiva y de la prueba hipertensión--CHD. Se utiliza \texttt{prevalentHyp} como viene codificada, sin redefinirla con umbrales externos. $N$, las 10.000 iteraciones y las tolerancias son decisiones de diseño.
+
+En cada cohorte se genera $H\sim\mathrm{Bin}(N,q)$ y, condicionado a $H$, se generan independientemente $A\sim\mathrm{Bin}(H,p_1)$ y $C\sim\mathrm{Bin}(N-H,p_0)$. Se calculan la tasa $(A+C)/N$, el RR $(A/H)/(C/(N-H))$ cuando es estimable y su IC log-normal. La tasa esperada es $q p_1+(1-q)p_0=15{,}19585\,\%$ y el RR de referencia 2,2621. Cada tamaño usa 10.000 cohortes independientes (Morris et~al., 2019).
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{figuras/fig_montecarlo.png}
+\caption{Para $N=1.000$, distribución de tasas entre cohortes y media acumulada frente al valor teórico de S1.}
+\label{fig:mc}
+\end{figure}
+
+\textbf{Error Monte Carlo y convergencia.} Para $N=1.000$, la tasa media es 15,19155\,\% y la desviación entre cohortes 1,13324 puntos porcentuales (pp). El error estándar Monte Carlo de la media es $s_{\mathrm{tasas}}/\sqrt{B}=0{,}0113324$ pp, con margen aproximado del 95\,\% de $\pm0{,}0222$ pp. Más iteraciones reducen este error numérico, no la dispersión entre cohortes. En esta trayectoria (semilla 42), la media acumulada permanece a menos de 0,05 pp de la teórica desde la iteración 1.743. Esto respalda la precisión final de la media, sin garantizar igual precisión para colas o RR. Superar el umbral operativo de 18,2\,\% ocurre en 0,48\,\% de las cohortes, con error estándar Monte Carlo de 0,069 pp para esa frecuencia.
+
+\begin{table}[H]
+\centering\small
+\caption{Intervalos centrales del 95\,\% de los resultados entre cohortes simuladas; no son IC de un parámetro poblacional. Los percentiles del RR usan solo cohortes estimables.}
+\label{tab:mc}
+\begin{tabular}{rcccc}
+\toprule
+$N$ & Tasa CHD (\%) & RR & IC excluye 1 (\%) & RR no estimables \\
+\midrule
+100   & 9,0--23,0   & 0,82--6,53 & 42,21 & 7 \\
+250   & 10,8--19,6  & 1,26--4,15 & 77,79 & 0 \\
+500   & 12,2--18,4  & 1,49--3,43 & 96,74 & 0 \\
+1.000 & 13,0--17,4  & 1,69--3,03 & 99,98 & 0 \\
+4.238 & 14,1--16,3  & 1,97--2,60 & 100 & 0 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Interpretación y alcance.} Las tasas se concentran al crecer $N$. Para $N=100$, siete cohortes (0,07\,\%) no permiten calcular el RR con el procedimiento elegido por ausencia de grupo o eventos; sus percentiles usan 9.993 cohortes válidas. La frecuencia de IC que excluyen 1 usa las 10.000 cohortes y no cuenta los casos no estimables como detecciones. No garantiza significancia futura. Para $N=4.238$, el rango del RR [1,97; 2,60] es próximo al IC de S1 [1,97; 2,60]: indica coherencia bajo el modelo calibrado, no validación externa. Los parámetros se tratan como fijos; no se propaga su incertidumbre. Se supone independencia entre personas y no se modelan otros factores ni variabilidad adicional entre poblaciones.
+
+% ===================================================================
+% Responsable: Pablo Ríos
+\section{Análisis de robustez}
+
+\textbf{(a) Medias.} La media recortada al 5\,\% por cola baja 3,1\,\% en la glucosa (de 81,97 a 79,44 mg/dL; 4,9\,\% de atípicos según Tukey, 1977), 0,6\,\% en el colesterol y 1,1\,\% en la presión sistólica; sin atípicos, la media de glucosa (78,49) se acerca a su mediana (78,0), que conviene como valor típico. Como la glucosa es la media más asimétrica (asimetría 6,2), se remuestreó su IC ($B=10.000$): el clásico es [81,21; 82,72], el percentil [81,24; 82,73] y el BCa [81,28; 82,79] ($z_0=0{,}032$, $a=0{,}017$, mayores que en las demás medias); el BCa se desplaza unos 0,07 mg/dL hacia arriba, pero su amplitud (1,51) casi no cambia, así que la conclusión práctica se mantiene. El jackknife (Efron y Tibshirani, 1993) muestra que la observación más influyente cambia la media en solo 0,08, 0,11 y 0,04 unidades (hasta 0,2 errores estándar); su error estándar coincide con el clásico, pero en la media eso ocurre por construcción y no aporta evidencia.
+
+\textbf{(b) Correlaciones.} Sin los atípicos de Tukey, presión sistólica--CHD baja de 0,22 a 0,18 y presión sistólica--diastólica de 0,78 a 0,75; hipertensión--presión sistólica y edad--CHD no cambian. Los 126 atípicos de presión sistólica son valores altos, plausibles y de alto riesgo (39,7\,\% con CHD frente a 15,2\,\%): quitarlos restringe el rango (desviación de 22,0 a 18,8 mmHg) y baja la correlación casi por construcción, mientras Spearman, basada en rangos, da 0,19. Aportan señal real; no la inflan. Ninguna fila altera una correlación en más de 0,003 (jackknife).
+
+\textbf{(c) Prueba de edad.} t de Student ($p=6{,}8\times10^{-50}$), Welch ($1{,}0\times10^{-48}$), Mann--Whitney ($1{,}2\times10^{-47}$) y permutación ($p=0{,}0001$, la cota mínima) coinciden en la decisión; la probabilidad de que una persona con CHD sea mayor que una sin CHD es 0,68 (empates como mitad; 0,66 sin ellos). La conclusión no depende de la distribución supuesta.
+
+\textbf{(d) Distribuciones alternativas.} Se simuló la cobertura del IC clásico de la media de glucosa (10.000 muestras por caso). Con una población lognormal con la media y desviación de S1 cubre entre 94,8\,\% y 95,2\,\% para $n$ de 30 a 3.850; con la distribución empírica (asimetría 6,2; curtosis en exceso 58,6) cae a 88,0\,\% con $n=30$ y 89,1\,\% con $n=100$, y sube a 93,5\,\% con $n=500$ y 94,5\,\% con $n=3.850$, fallando casi siempre hacia abajo. Las colas pesadas provienen de una mezcla: el 97,3\,\% no diabético es casi simétrico (asimetría 1,0) y el 2,7\,\% diabético llega a 394 mg/dL; los 34 registros de 200 mg/dL o más, todos de diabéticos, aportan el 97,7\,\% de la suma que define la curtosis. Con $n=30$, el 77\,\% de las muestras no contiene ninguno, así que su media y su desviación quedan bajas. El Teorema Central del Límite depende del tamaño de muestra y del peso de las colas: con el $n$ de S1 el IC es confiable; con $n\leq100$ habría sido optimista.
+
+\textbf{Conclusiones.} \emph{Confiables:} los IC de edad, colesterol y presión sistólica medias y de la proporción de CHD; las dos pruebas de hipótesis; y las correlaciones presión sistólica--diastólica, hipertensión--presión sistólica y edad--CHD. \emph{Requieren cautela:} la media de glucosa como valor típico; la magnitud de las correlaciones con presión sistólica, que depende de sus valores altos; la correlación fumador--CHD, indistinguible de cero; y el IC de la mediana, toscamente discreto. \emph{Supuesto sin verificar:} la independencia entre participantes.
+
+% ===================================================================
+% Responsable: Pablo Ríos
+\section{Preparación para la Sumativa 3}
+
+\begin{sloppypar}
+La Tabla~\ref{tab:val} resume los resultados validados; el notebook los guarda, con las observaciones influyentes, en \texttt{resultados\_\allowbreak validados.csv} y \texttt{observaciones\_\allowbreak influyentes.csv}. Para que S3 parta de los mismos datos, el CSV analizado (4.238 filas, versión 1 de Kaggle, SHA-256 \texttt{40921748\ldots}) se versiona en el repositorio como \texttt{data/\allowbreak raw/\allowbreak framingham.csv}, porque Kaggle puede entregar copias distintas del dataset; los notebooks verifican su huella antes de analizar.
+\end{sloppypar}
+
+\begin{table}[H]
+\centering
+\small
+\caption{Resultados de S1 validados con remuestreo (resumen).}
+\label{tab:val}
+\begin{tabular}{>{\raggedright\arraybackslash}p{5.7cm} >{\raggedright\arraybackslash}p{6.5cm} l}
+\toprule
+\textbf{Resultado de S1} & \textbf{Evidencia de S2} & \textbf{Veredicto} \\
+\midrule
+Medias de edad, colesterol y PAS; proporción de CHD & El BCa se aparta del clásico 0,6--1,4\,\% de su amplitud & Robusto \\
+Media de glucosa & Sensible a extremos y a $n$ pequeño & Cautela \\
+Mediana del colesterol & IC percentil y BCa toscos (valores enteros) & Cautela \\
+Pruebas edad--CHD y HTA--CHD & $p$ perm.\ 0,0001; Mann--Whitney concuerda & Robusto \\
+$r$ PAS--PAD, HTA--PAS, edad--CHD & IC bootstrap estrechos, sin el cero & Robusto \\
+$r$ PAS--CHD (0,22) & IC sin el cero; 0,18 sin los valores altos & Signo robusto \\
+$r$ fumador--CHD (0,02) & IC bootstrap incluye el cero & Inestable \\
+RR HTA--CHD (2,26) & Monte Carlo lo reproduce con $N=4.238$ & Coherente \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Observaciones influyentes.} El registro 481 (mujer de 64 años, PAS 295 mmHg, con CHD) influye en tres resultados; el 2909 (glucosa 394 mg/dL), el 3160 (colesterol 696 mg/dL), el 2197 y el 781, en uno cada uno. Son índices de pandas (línea del CSV = índice + 2); su efecto es pequeño, pero deben registrarse.
+
+\textbf{Recomendaciones para S3.}
+\begin{enumerate}[leftmargin=1.4em,itemsep=0pt,parsep=0pt,topsep=0.1em]
+\item \emph{Predictoras estables:} edad y presión sistólica ($r\approx0{,}22$ con CHD). La presión sistólica forma un bloque colineal con la diastólica ($r=0{,}78$) y con la hipertensión prevalente ($r\approx0{,}70$), ambas estables en S2: en S3 conviene entrar solo una de las tres al modelo (la sistólica, por su asociación con CHD) y verificar el VIF si se agrega otra.
+\item \emph{Tabaquismo:} su correlación marginal no se distingue de cero, pero eso no permite descartarlo: debe evaluarse en el modelo multivariable.
+\item \emph{Valores extremos:} no eliminarlos (plausibles, S1). En la glucosa el logaritmo no basta (asimetría 2,25; curtosis 12,0): acotar al percentil 99 (175 mg/dL) y verificar el VIF con diabetes ($r=0{,}62$).
+\item \emph{Observaciones influyentes:} ajustar los modelos con y sin los registros listados y reportar si cambian los coeficientes.
+\item \emph{Desempeño:} con 15,2\,\% de prevalencia, un 30\,\% de prueba tiene unos 190 casos; usar partición estratificada, validación cruzada repetida e IC bootstrap para AUC, sensibilidad y precisión.
+\item \emph{Faltantes:} imputar la glucosa (9,2\,\%) con la mediana calculada solo en el conjunto de entrenamiento, para no filtrar información al de prueba.
+\end{enumerate}
+
+% ===================================================================
+% Responsable: Pablo Ríos
+\clearpage
+\section{Bibliografía (APA 7)}
+
+\begin{list}{}{\leftmargin=1.5em \itemindent=-1.5em \itemsep=0.05em \parsep=0pt}\footnotesize\raggedright
+\item Dileep. (2019). \textit{Logistic regression to predict heart disease} (Versión 1) [Conjunto de datos]. Kaggle. \url{https://www.kaggle.com/datasets/dileep070/heart-disease-prediction-using-logistic-regression}
+\item Efron, B. (1987). Better bootstrap confidence intervals. \textit{Journal of the American Statistical Association, 82}(397), 171--185. \url{https://doi.org/10.1080/01621459.1987.10478410}
+\item Efron, B., \& Tibshirani, R. J. (1993). \textit{An introduction to the bootstrap}. Chapman \& Hall/CRC. \url{https://doi.org/10.1201/9780429246593}
+\item Fisher, R. A. (1915). Frequency distribution of the values of the correlation coefficient in samples from an indefinitely large population. \textit{Biometrika, 10}(4), 507--521. \url{https://doi.org/10.2307/2331838}
+\item Harris, C. R., Millman, K. J., van der Walt, S. J., Gommers, R., Virtanen, P., Cournapeau, D., Wieser, E., Taylor, J., Berg, S., Smith, N. J., Kern, R., Picus, M., Hoyer, S., van Kerkwijk, M. H., Brett, M., Haldane, A., Fernández del Río, J., Wiebe, M., Peterson, P., \dots\ Oliphant, T. E. (2020). Array programming with NumPy. \textit{Nature, 585}(7825), 357--362. \url{https://doi.org/10.1038/s41586-020-2649-2}
+\item Maidana, J. P. (2026). \textit{Bootstrap para intervalos de confianza} [Apunte de clase]. MCDI501: Estadística Computacional para la Toma de Decisiones, Universidad Andrés Bello.
+\item McKinney, W. (2010). Data structures for statistical computing in Python. En S. van der Walt y J. Millman (Eds.), \textit{Proceedings of the 9th Python in Science Conference} (pp.~56--61). \url{https://doi.org/10.25080/Majora-92bf1922-00a}
+\item Morris, T. P., White, I. R., \& Crowther, M. J. (2019). Using simulation studies to evaluate statistical methods. \textit{Statistics in Medicine, 38}(11), 2074--2102. \url{https://doi.org/10.1002/sim.8086}
+\item Phipson, B., \& Smyth, G. K. (2010). Permutation P-values should never be zero: Calculating exact P-values when permutations are randomly drawn. \textit{Statistical Applications in Genetics and Molecular Biology, 9}(1), Artículo 39. \url{https://doi.org/10.2202/1544-6115.1585}
+\item Tukey, J. W. (1977). \textit{Exploratory data analysis}. Addison-Wesley.
+\item Virtanen, P., Gommers, R., Oliphant, T. E., Haberland, M., Reddy, T., Cournapeau, D., Burovski, E., Peterson, P., Weckesser, W., Bright, J., van der Walt, S. J., Brett, M., Wilson, J., Millman, K. J., Mayorov, N., Nelson, A. R. J., Jones, E., Kern, R., Larson, E., \dots\ SciPy 1.0 Contributors. (2020). SciPy 1.0: Fundamental algorithms for scientific computing in Python. \textit{Nature Methods, 17}(3), 261--272. \url{https://doi.org/10.1038/s41592-019-0686-2}
+\item Welch, B. L. (1947). The generalization of ``Student's'' problem when several different population variances are involved. \textit{Biometrika, 34}(1--2), 28--35. \url{https://doi.org/10.1093/biomet/34.1-2.28}
+\end{list}
+
+\end{document}

@@ -20,9 +20,11 @@ __pycache__/
 .virtual_documents/
 anaconda_projects/
 
-# Dataset original: no se versiona, ver data/README.md
+# Dataset original: solo se versiona la copia exacta usada en los informes (ver data/README.md),
+# porque Kaggle puede entregar versiones distintas del mismo dataset.
 data/raw/*
 !data/raw/.gitkeep
+!data/raw/framingham.csv
 
 # Datos pesados y modelos
 *.ckpt
@@ -42,3 +44,7 @@ redaccion/**/*.fdb_latexmk
 redaccion/**/informe.pdf
 # Salida de scratch del notebook (no hace falta para compilar el informe)
 informes/formativa-1-eda-inferencia/figuras/
+
+# Notas sueltas en Markdown (se mantienen los README.md)
+*.md
+!**/README.md

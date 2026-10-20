@@ -1,0 +1,15 @@
+Resultado de S1,Valor S1,IC clásico S1,Evidencia S2 (IC o p),Veredicto,Evidencia
+Edad media (años),49.58,[49.33; 49.84],[49.33; 49.85],Robusto,BCa difiere 0.8% de la amplitud del IC clásico
+Colesterol total medio (mg/dL),236.72,[235.37; 238.07],[235.41; 238.08],Robusto,BCa difiere 1.3% de la amplitud del IC clásico
+Presión sistólica media (mmHg),132.35,[131.69; 133.02],[131.71; 133.03],Robusto,BCa difiere 1.4% de la amplitud del IC clásico
+Proporción de CHD a 10 años,15.20,[14.15; 16.31],[14.13; 16.30],Robusto,BCa difiere 0.6% de la amplitud del IC clásico
+Mediana del colesterol,234.00,—,[232.00; 236.00],Usar con cautela,Sin fórmula clásica; IC percentil [232; 235] y BCa toscos: el colesterol se mide en enteros y la mediana toma pocos valores
+Glucosa media (mg/dL),81.97,[81.21; 82.72],[81.28; 82.79] (BCa),Usar con cautela,Media recortada al 5% por cola = 79.44; cobertura del IC clásico 88.0% con n = 30 y 89.1% con n = 100
+Prueba 1: edad y CHD (Welch),dif. = 5.38 años,p = 1.0e-48,p perm. = 0.0001 (0 de 10.000 permutaciones igualan lo observado),Robusto,"Permutación, Mann-Whitney y Student concuerdan; la nula permutada reproduce la t teórica"
+Prueba 2: hipertensión y CHD (χ²),χ² = 132.6,p = 1.1e-30,p perm. = 0.0001,Robusto,RR simulado reproducible (N = 4.238: significativo en 100% de cohortes)
+RR hipertensión y CHD (Monte Carlo),RR = 2.26,[1.97; 2.60],"[1.97; 2.60] (10.000 cohortes, N = 4.238)",Coherente,Intervalo central de cohortes simuladas con parámetros de S1; no es validación externa
+Correlación Presión sistólica – diastólica,r = 0.784,—,[0.769; 0.799] (bootstrap percentil),Robusto,IC bootstrap no incluye el cero
+Correlación Hipertensión prevalente – presión sistólica,r = 0.697,—,[0.682; 0.711] (bootstrap percentil),Robusto,IC bootstrap no incluye el cero
+Correlación Edad – CHD,r = 0.225,—,[0.197; 0.254] (bootstrap percentil),Robusto,IC bootstrap no incluye el cero
+Correlación Presión sistólica – CHD,r = 0.216,—,[0.183; 0.250] (bootstrap percentil),Signo robusto; magnitud con cautela,IC bootstrap no incluye el cero; r = 0.181 sin los valores atípicos (Tukey)
+Correlación Fumador actual – CHD,r = 0.019,—,[-0.011; 0.049] (bootstrap percentil),Inestable (sin efecto distinguible de cero),IC bootstrap incluye el cero

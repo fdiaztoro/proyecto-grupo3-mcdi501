@@ -1,0 +1,8 @@
+Variable o correlación,Índice pandas,Línea en framingham.csv,Valor,Efecto sobre el estadístico
+glucose,2909,2911,394.0,0.0810686533523608
+totChol,3160,3162,696.0,0.10969152484298661
+sysBP,481,483,295.0,0.038387442342326494
+r Presión sistólica – diastólica,2197,2199,,0.002046655186804802
+r Hipertensión prevalente – presión sistólica,481,483,,0.002093729682536627
+r Edad – CHD,781,783,,0.0011752577648070084
+r Presión sistólica – CHD,481,483,,0.0025962059706487184
