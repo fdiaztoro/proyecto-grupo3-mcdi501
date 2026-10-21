@@ -29,3 +29,4 @@ ipykernel==7.3.0
 jupyterlab-git==0.54.1
 jupytext==1.19.5
 nbstripout==0.9.1
+statsmodels==0.15.0

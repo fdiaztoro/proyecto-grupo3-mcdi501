@@ -9,3 +9,4 @@ informes/sumativa-2-validacion-simulacion-remuestreo/Sumativa2_FraminghamHeartSt
 
 # Copia versionada del dataset: se guarda byte a byte (sin convertir CRLF) para que su SHA-256 sea el mismo en todo sistema.
 data/raw/framingham.csv -text
+informes/formativa-2-modelamiento-predictivo/Formativa2_FraminghamHeartStudy_Codigo.ipynb -filter
