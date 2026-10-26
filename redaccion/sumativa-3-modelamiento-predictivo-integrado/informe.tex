@@ -106,7 +106,7 @@ Repositorio GitHub:  & \proyRepo \\
 \pagenumbering{arabic}
 
 \section*{Resumen ejecutivo}
-Este informe integra S1, S2 y F2 en un modelo predictivo del riesgo de enfermedad coronaria (CHD) a 10 años, con 4.238 participantes del estudio de Framingham (15,2\,\% con CHD; Dileep, 2019). La glucosa, que falta en el 9,16\,\% de los registros, se imputó con una regresión lineal múltiple (R$^2$ = 0,41; error de validación cruzada 23\,\% menor que el de la mediana) bajo un supuesto MAR, y se comparó con eliminar los casos y con imputar la mediana. Se ajustaron tres modelos logísticos con criterios de selección distintos: edad y presión sistólica (validadas en S2), selección hacia adelante por AIC y un modelo reducido por BIC. El reducido (edad, sistólica, sexo, cigarrillos por día y glucosa) ofrece el mejor equilibrio (AUC en test = 0,703). Ponderar las clases (peso 3,29 para los casos) sube el recall de 4,7\,\% a 60,1\,\% sin alterar el AUC. El bootstrap (2.000 remuestras) confirma que ningún coeficiente cruza el cero, y la estrategia de imputación no cambia las conclusiones. La limitación principal es la capacidad discriminativa moderada (AUC $\approx$ 0,70), que impide usar el modelo como herramienta de diagnóstico individual.
+Este informe integra S1, S2 y F2 en un modelo predictivo del riesgo de enfermedad coronaria (CHD) a 10 años, con 4.238 participantes del estudio de Framingham (15,2\,\% con CHD; Dileep, 2019). La glucosa, que falta en el 9,16\,\% de los registros, se imputó con una regresión lineal múltiple (R$^2$ = 0,41; error de validación cruzada 23\,\% menor que el de la mediana) bajo un supuesto MAR, y se comparó con eliminar los casos y con imputar la mediana. Se ajustaron tres modelos logísticos con criterios de selección distintos: el de F2 (edad, sistólica, sexo, cigarrillos por día y glucosa, 5 variables), una selección hacia adelante por AIC (8 variables) y un modelo reducido sin glucosa (4 variables, para no depender de la única variable imputada). El de F2 tiene el mejor AUC en test (0,703) y fue elegido como modelo final. Ponderar las clases (peso 3,29 para los casos) sube el recall de 4,7\,\% a 60,1\,\% sin alterar el AUC. El bootstrap (2.000 remuestras) confirma que ningún coeficiente cruza el cero, y la estrategia de imputación no cambia las conclusiones. La limitación principal es la capacidad discriminativa moderada (AUC $\approx$ 0,70), que impide usar el modelo como herramienta de diagnóstico individual.
 
 \section{Introducción y progresión S1 $\to$ S2 $\to$ S3}
 La enfermedad coronaria es una de las principales causas de muerte en el mundo. Con la copia versionada del estudio de Framingham (Dileep, 2019; huella SHA-256 verificada en cada evaluación) buscamos predecir si una persona desarrollará CHD en 10 años a partir de sus factores de riesgo. Solo el 15,2\,\% de los participantes la desarrolla, por lo que la clase de interés es minoritaria. La Tabla~\ref{tab:prog} resume qué heredó este trabajo de las evaluaciones previas.
@@ -119,7 +119,7 @@ La enfermedad coronaria es una de las principales causas de muerte en el mundo. 
 \textbf{Fase} & \textbf{Hallazgo} & \textbf{Uso en S3} \\
 \midrule
 S1 & Edad ($r=0,225$) y sistólica ($r=0,216$) son las más asociadas a CHD; faltantes en 7 variables, glucosa con 9,16\,\%; valores extremos plausibles & Base de la selección de variables y de los predictores de la imputación; referencia del mecanismo de faltantes \\
-S2 & Correlaciones de edad [0,197; 0,254] y sistólica [0,183; 0,250] estables por bootstrap; diastólica e hipertensión colineales con la sistólica ($r=0,78$ y $0,70$); cinco observaciones influyentes & Modelo 1 (edad y sistólica); una sola variable de presión; revisión de influyentes \\
+S2 & Correlaciones de edad [0,197; 0,254] y sistólica [0,183; 0,250] estables por bootstrap; diastólica e hipertensión colineales con la sistólica ($r=0,78$ y $0,70$); cinco observaciones influyentes & Una sola variable de presión en los tres modelos; revisión de influyentes \\
 F2 & Modelo de 5 variables: AUC 0,703, pero recall de solo 4,7\,\% con umbral 0,5 & Punto de partida: se corrige el recall con ponderación de clases \\
 \bottomrule
 \end{tabular}
@@ -190,10 +190,10 @@ Como solo el 9,6\,\% de la glucosa de train se imputó, las diferencias son pequ
 
 \section{Clasificación mediante regresión logística}
 \subsection{Preparación de datos}
-Sobre la glucosa imputada, el resto de los faltantes menores se rellena con la mediana de train; en cigarrillos por día se usa la de los \emph{fumadores} (20), porque los 29 faltantes son todos fumadores actuales y la mediana general es 0. La cola de la glucosa se acota al percentil 99 de train (187,1\,mg/dL), como en S2 y F2, y los 14 candidatos se estandarizan con la media y la desviación de train (Pedregosa et~al., 2011). Educación se excluye (ordinal, con faltantes propios y $r=-0,054$ con el desenlace). Por la estandarización, todo odds ratio (OR) se lee por cada desviación estándar del predictor.
+Sobre la glucosa imputada, el resto de los faltantes menores se rellena con la mediana de train; en cigarrillos por día se usa la de los \emph{fumadores} (20), porque los 29 faltantes son todos fumadores actuales y la mediana general es 0. La regla de Tukey que se aplicó en F2 marcó valores extremos en sistólica (3,0\,\%), glucosa (4,9\,\%) y cigarrillos (0,3\,\%); S1 y F2 concluyeron que los de sistólica y cigarrillos son clínicamente plausibles y no los trataron, decisión que mantenemos. La glucosa es la única donde S2 recomendó acotar la cola, lo que hacemos al percentil 99 de train (187,1\,mg/dL). Los 14 candidatos se estandarizan con la media y la desviación de train (Pedregosa et~al., 2011). Educación es la única variable categórica del dataset (ordinal, 4 niveles) y se excluye en vez de codificarse, por tener faltantes propios y una asociación débil con el desenlace ($r=-0,054$); las demás variables usadas son binarias y no requieren codificación adicional. Por la estandarización, todo odds ratio (OR) se lee por cada desviación estándar del predictor.
 
 \subsection{Tres modelos con distintos criterios de selección}
-Los tres se ajustan con \texttt{statsmodels} (Seabold y Perktold, 2010): el \textbf{Modelo 1} usa edad y sistólica, las dos correlaciones que S1 destacó y S2 validó; el \textbf{Modelo 2} es una selección hacia adelante por AIC sobre los 14 candidatos; el \textbf{Modelo 3}, reducido, parte del Modelo 2 y elimina variables mientras el BIC mejore.
+Los tres se ajustan con \texttt{statsmodels} (Seabold y Perktold, 2010), siguiendo la estructura que pidió el profesor en la retroalimentación de F2 (``ajusten 3 regresiones logísticas, una con estas 5 variables, otra por stepwise según AIC y una reducida''): el \textbf{Modelo 1} reutiliza las cinco variables de F2 (edad, sistólica, sexo, cigarrillos por día y glucosa), ya justificadas con evidencia de S1 y S2; el \textbf{Modelo 2} es una selección hacia adelante por AIC sobre los 14 candidatos; el \textbf{Modelo 3}, reducido, elimina deliberadamente la glucosa del Modelo 1 (la única de las cinco variables con valores imputados, 9,2\,\%), para tener una alternativa que no dependa de ningún dato imputado.
 
 \begin{table}[H]
 \centering\small
@@ -202,14 +202,14 @@ Los tres se ajustan con \texttt{statsmodels} (Seabold y Perktold, 2010): el \tex
 \toprule
 \textbf{Modelo} & \textbf{Var.} & \textbf{AIC} & \textbf{BIC} & \textbf{AUC} & \textbf{Recall} & \textbf{F1} \\
 \midrule
-1. Validado (edad, sistólica)          & 2 & 2.306,3 & 2.324,3 & 0,674 & 0,565 & 0,325 \\
+1. Guiado por S1/S2 (como F2)          & 5 & 2.243,3 & 2.279,3 & 0,703 & 0,601 & 0,352 \\
 2. Hacia adelante por AIC              & 8 & 2.233,7 & 2.287,7 & 0,699 & 0,596 & 0,349 \\
-3. Reducido por BIC                    & 5 & 2.243,3 & 2.279,3 & 0,703 & 0,601 & 0,352 \\
+3. Reducido (sin glucosa)              & 4 & 2.254,0 & 2.283,9 & 0,701 & 0,617 & 0,356 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-El Modelo 2 incorpora, en este orden, edad, sistólica, cigarrillos, glucosa y sexo (las cinco de F2, que un algoritmo que no las conocía eligió primero), y luego antecedente de ACV, colesterol y medicación, con efectos pequeños (OR 1,09 a 1,13) y $p$ en el borde de la significancia (0,008 a 0,045). El Modelo 3 elimina esas tres y se detiene en \textbf{edad, sistólica, cigarrillos por día, glucosa y sexo}: las mismas cinco variables de F2, ahora halladas por dos vías independientes. Pasar de dos a cinco variables mejora el AIC en 63 puntos; pasar de cinco a ocho lo mejora en solo 9,6 y empeora el BIC. El modelo completo (14 variables) no mejora al Modelo 3 en AIC (2.243,3) y tiene el peor BIC (2.333,2). Con ponderación, las AUC son 0,673; 0,697 y 0,702: la ponderación casi no las altera.
+El Modelo 2 incorpora, en este orden, edad, sistólica, cigarrillos, glucosa y sexo (las cinco del Modelo 1, que un algoritmo que no las conocía eligió primero), y luego antecedente de ACV, colesterol y medicación, con efectos pequeños (OR 1,09 a 1,13) y $p$ en el borde de la significancia (0,008 a 0,045). Antes de construir el Modelo 3 probamos si el AIC/BIC puro justifica reducir el Modelo 1: eliminar cualquiera de sus cinco variables \textbf{empeora} el AIC (sube de 2.243,3 a entre 2.253,6 y 2.344,4 según cuál se saque), así que el criterio estadístico no reduce el modelo por sí solo. Por eso el Modelo 3 reduce por un criterio distinto —calidad del dato, no ajuste estadístico—: sin la glucosa, el AIC sube solo 10,7 puntos y las cuatro variables restantes siguen siendo significativas. Los tres modelos quedan así genuinamente distintos (5, 8 y 4 variables). El modelo completo (14 variables) no mejora al Modelo 1 en AIC (2.243,3) y tiene el peor BIC (2.333,2).
 
 \subsection{Ponderación de clases y desempeño}
 Con umbral 0,5, el modelo de F2 detectaba solo el 4,7\,\% de los casos. Ponderamos cada observación con el inverso de la frecuencia de su clase (3,29 para los casos y 0,59 para los demás; igual que \texttt{class\_weight='balanced'} y coherente con el $\approx$3,3 que prevé la prevalencia de 15,2\,\%). Las curvas ROC de los tres modelos se muestran en la Figura~\ref{fig:roc}.
@@ -222,18 +222,20 @@ Con umbral 0,5, el modelo de F2 detectaba solo el 4,7\,\% de los casos. Ponderam
 
 \begin{table}[H]
 \centering\small
-\caption{Modelo final (Modelo 3) en test, sin ponderar y ponderado.}\label{tab:conf}
-\begin{tabular}{@{}lrrrrrr@{}}
+\caption{Modelo final (Modelo 1) en entrenamiento y prueba, sin ponderar y ponderado.}\label{tab:conf}
+\begin{tabular}{@{}llrrrrrr@{}}
 \toprule
- & \textbf{VN} & \textbf{FP} & \textbf{FN} & \textbf{VP} & \textbf{Accuracy} & \textbf{Recall} \\
+\textbf{Ajuste} & \textbf{Conjunto} & \textbf{VN} & \textbf{FP} & \textbf{FN} & \textbf{VP} & \textbf{Accuracy} & \textbf{Recall} \\
 \midrule
-Sin ponderar  & 1.066 & 13  & 184 & 9   & 0,845 & 0,047 \\
-Ponderado     & 729   & 350 & 77  & 116 & 0,664 & 0,601 \\
+Sin ponderar & Train & 2.500 & 15  & 414 & 37  & 0,855 & 0,082 \\
+Sin ponderar & Test  & 1.066 & 13  & 184 & 9   & 0,845 & 0,047 \\
+Ponderado    & Train & 1.700 & 815 & 137 & 314 & 0,679 & 0,696 \\
+Ponderado    & Test  & 729   & 350 & 77  & 116 & 0,664 & 0,601 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-La ponderación detecta 116 de los 193 casos del test (de 9 antes) a costa de más falsos positivos (precision de 25\,\%) y menor accuracy, que ya no es el espejismo de predecir siempre ``sin CHD'' (el clasificador trivial acierta 84,8\,\%). El AUC no se mueve (0,703 a 0,702): la ponderación solo cambia el punto de corte sobre la misma curva. El Modelo 1 queda claramente por debajo y el Modelo 2 mejora el entrenamiento (AUC 0,744) sin mejorar el test; su brecha train--test es mayor (0,047 frente a 0,036). \textbf{El modelo final es el Modelo 3 ponderado}: el mejor AUC y recall, y más simple que el Modelo 2. El AUC de 0,70 es aceptable, no alto (Hosmer et~al., 2013).
+La ponderación detecta 116 de los 193 casos del test (de 9 antes) a costa de más falsos positivos (precision de 25\,\%) y menor accuracy, que ya no es el espejismo de predecir siempre ``sin CHD'' (el clasificador trivial acierta 84,8\,\%). El AUC no se mueve (0,703 a 0,702): la ponderación solo cambia el punto de corte sobre la misma curva. El recall baja algo más de train a test (69,6\,\% a 60,1\,\%) que el AUC (0,738 a 0,702), una señal de sobreajuste leve en el punto de corte, no en la capacidad de ordenar por riesgo. Ponderados, el Modelo 1 llega a AUC 0,702, el Modelo 2 a 0,697 (mejora el entrenamiento a 0,744 sin mejorar el test, señal de sobreajuste leve por sus tres variables adicionales) y el Modelo 3 a 0,700, con mejor recall (61,7\,\%) y F1 (0,356) que el Modelo 1. \textbf{El modelo final es el Modelo 1, ponderado}: tiene el mejor AUC de los tres —la métrica que no depende del umbral, y por eso la más robusta para comparar— y usa la glucosa, un marcador clínico relevante que imputamos con un método validado (Sección 2); no vemos necesario descartarla solo por su incertidumbre de imputación. El Modelo 3 queda documentado como alternativa competitiva y más simple si se prioriza no depender de datos imputados. El AUC de 0,70 es aceptable, no alto (Hosmer et~al., 2013).
 
 \subsection{Estabilidad mediante bootstrap}
 Se aplicó bootstrap no paramétrico al modelo final: 2.000 remuestras de las filas de train, recalculando en cada una el peso de clase y reajustando el modelo, con IC percentil al 95\,\% (Efron y Tibshirani, 1993), comparado con el IC de Wald tradicional (Tabla~\ref{tab:boot}). Todas las remuestras convergieron.
@@ -257,12 +259,12 @@ Glucosa              & 1,16 & [1,05; 1,28] & [1,08; 1,25] \\
 Ningún IC bootstrap incluye el 1: los cinco parámetros son estables. Los menos estables son \textbf{glucosa y sexo}, cuyos límites inferiores están más cerca de 1 (en coeficiente, 0,052 y 0,057). Los IC bootstrap son más anchos que los de Wald en los cinco predictores, porque Wald supone normalidad asintótica y no recoge la incertidumbre de recalcular el peso de clase. Ningún parámetro cambia de signo ni de significancia entre ambos métodos. Usamos 2.000 y no 10.000 remuestras (S2) porque cada una reajusta un modelo ponderado.
 
 \subsection{Diagnóstico de supuestos}
-Sobre el Modelo 3 sin ponderar (la ponderación no cambia la especificación): el \textbf{VIF} está entre 1,03 y 1,23, sin multicolinealidad; si se agregaran diastólica e hipertensión, el de la sistólica subiría de 1,20 a 3,69, lo que respalda conservar una sola variable de presión. La \textbf{linealidad en el logit} (Box y Tidwell, 1962) se cumple para sistólica ($p=0,27$), cigarrillos (0,71) y glucosa (0,098), pero no del todo para la \textbf{edad} ($p=0,011$, que sobrevive a corregir por las cuatro pruebas); no se corrige para conservar la interpretación del OR y queda como limitación. De las observaciones influyentes de S2, solo la 481 y la 2197 caen en el train de S3 y ambas quedan bajo el umbral $4/n$ (Cook $=0,00077$ y $0,00121$, frente a $0,00135$); el máximo global es 0,0096, muy lejos de 1. Los residuos no muestran patrones preocupantes (Figura~\ref{fig:diag}).
+Sobre el modelo final sin ponderar (Modelo 1; la ponderación no cambia la especificación): el \textbf{VIF} está entre 1,03 y 1,23, sin multicolinealidad; si se agregaran diastólica e hipertensión, el de la sistólica subiría de 1,20 a 3,69 (coincide con el máximo de 3,71 que reportó el profesor en su retroalimentación de F2), lo que respalda conservar una sola variable de presión. La \textbf{linealidad en el logit} (Box y Tidwell, 1962) se cumple para sistólica ($p=0,27$), cigarrillos (0,71) y glucosa (0,098), pero no del todo para la \textbf{edad} ($p=0,011$, que sobrevive a corregir por las cuatro pruebas); no se corrige para conservar la interpretación del OR y queda como limitación. De las observaciones influyentes de S2, solo la 481 y la 2197 caen en el train de S3 y ambas quedan bajo el umbral $4/n$ (Cook $=0,00077$ y $0,00121$, frente a $0,00135$); el máximo global es 0,0096, muy lejos de 1. Los residuos no muestran patrones preocupantes (Figura~\ref{fig:diag}).
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.9\linewidth]{figuras/fig_diagnostico.png}
-\caption{Diagnóstico del Modelo 3: residuos estudentizados frente a la probabilidad ajustada (izquierda) y distancia de Cook por observación (derecha; línea roja, umbral $4/n$).}\label{fig:diag}
+\caption{Diagnóstico del modelo final (Modelo 1): residuos estudentizados frente a la probabilidad ajustada (izquierda) y distancia de Cook por observación (derecha; línea roja, umbral $4/n$).}\label{fig:diag}
 \end{figure}
 
 \section{Análisis comparativo del impacto de la imputación}
@@ -285,11 +287,11 @@ Regresión   & 2.966 & 1.272 & 0,702 & 0,664 & 0,601 & 1,90 & 1,16 \\
 La estrategia de imputación casi no cambia las conclusiones: AUC, recall y odds ratios son prácticamente idénticos. La diferencia real es el tamaño de muestra: eliminar pierde 388 personas (286 en train y 102 en test), reduce la precisión y sesga levemente la composición por sexo; además, su test es más chico, por lo que sus métricas no son estrictamente comparables. Se confirma la imputación por regresión como la opción por defecto. Con tan pocos valores imputados, las tres no se distinguen, y con una tasa de faltantes mayor la brecha probablemente sería mayor.
 
 \section{Discusión y conclusiones}
-\textbf{Progresión.} S1 señaló edad y presión sistólica y describió faltantes y extremos; S2 validó esas correlaciones y detectó la colinealidad de la presión; F2 las convirtió en un modelo cuyo recall era casi nulo; S3 trató la glucosa con un método más honesto que la mediana, comparó tres modelos (el reducido por BIC redescubrió las cinco variables de F2) y corrigió el recall ponderando las clases. El modelo final detecta el 60,1\,\% de los casos del test con un AUC de 0,70, es estable al bootstrap y no tiene multicolinealidad.
+\textbf{Progresión.} S1 señaló edad y presión sistólica y describió faltantes y extremos; S2 validó esas correlaciones y detectó la colinealidad de la presión; F2 las convirtió en un modelo de 5 variables cuyo recall era casi nulo; en su retroalimentación, el profesor pidió para S3 exactamente estos tres modelos (uno con esas 5 variables, uno por stepwise AIC y uno reducido). S3 trató la glucosa con un método más honesto que la mediana, construyó los tres modelos pedidos (el de 5 variables de F2 resultó ganador por AUC; el reducido, de 4 variables sin glucosa, quedó como alternativa competitiva) y corrigió el recall ponderando las clases. El modelo final detecta el 60,1\,\% de los casos del test con un AUC de 0,70, es estable al bootstrap y no tiene multicolinealidad.
 
 \textbf{Limitaciones.} (1) El AUC de 0,70 es moderado: el modelo ordena razonablemente el riesgo, pero no separa bien a los casos de los no casos, y con precision de 25\,\% no sirve como diagnóstico individual. (2) El MAR de la glucosa es un supuesto no verificable. (3) La imputación, aunque mejor que la mediana, comprime la variabilidad de la glucosa. (4) La edad presenta una no linealidad leve no corregida. (5) Se usó un único logístico lineal y una sola partición, con 193 casos en el test.
 
-\textbf{Recomendaciones.} Explorar un término no lineal para la edad (cuadrático o \emph{splines}); elegir el umbral de decisión según el costo relativo de un falso negativo frente a uno falso positivo, en vez de fijarlo en 0,5; validar con validación cruzada; y comparar contra un modelo no lineal para medir lo que se pierde por restringirse a lo lineal.
+\textbf{Recomendaciones.} Explorar un término no lineal para la edad (cuadrático o \emph{splines}); elegir el umbral de decisión según el costo relativo de un falso negativo frente a uno falso positivo, en vez de fijarlo en 0,5; usar validación cruzada como diagnóstico adicional de estabilidad entre los tres modelos (sin reemplazar la partición 70/30, que se mantiene como evaluación principal); y comparar contra un modelo no lineal para medir lo que se pierde por restringirse a lo lineal.
 
 \section*{Bibliografía (APA 7)}
 \begin{list}{}{\leftmargin=1.5em \itemindent=-1.5em \itemsep=0.25em \parsep=0pt}\small\raggedright
